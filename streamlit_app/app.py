@@ -13,26 +13,17 @@ st.set_page_config(
     initial_sidebar_state="auto"
 )
 
-# Minimal CSS - only for custom components, let Streamlit handle theme
+# Minimal CSS
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 
 <style>
-    /* Hide Streamlit branding */
     #MainMenu, footer, header {visibility: hidden;}
     .stDeployButton {display: none;}
-    
-    /* Typography */
     .main { font-family: 'Inter', sans-serif !important; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
     
-    /* Material Icons */
-    .material-symbols-outlined {
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        vertical-align: middle;
-    }
-    
-    /* Badge styles */
     .badge {
         display: inline-flex;
         align-items: center;
@@ -42,18 +33,27 @@ st.markdown("""
         font-size: 0.75rem;
         font-weight: 500;
     }
-    
-    .badge-primary {
-        background: rgba(59, 130, 246, 0.15);
-        color: #3b82f6;
-    }
-    
-    .badge-success {
-        background: rgba(34, 197, 94, 0.15);
-        color: #22c55e;
-    }
+    .badge-primary { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+    .badge-success { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
 </style>
 """, unsafe_allow_html=True)
+
+# ============ TOP NAVIGATION BAR ============
+nav_cols = st.columns(4)
+with nav_cols[0]:
+    if st.button("🏠 Home", use_container_width=True, type="primary"):
+        st.switch_page("app.py")
+with nav_cols[1]:
+    if st.button("🔬 Predict", use_container_width=True):
+        st.switch_page("pages/1_🔬_Live_Prediction.py")
+with nav_cols[2]:
+    if st.button("📊 Metrics", use_container_width=True):
+        st.switch_page("pages/2_📊_Model_Insights.py")
+with nav_cols[3]:
+    if st.button("🗂️ Dataset", use_container_width=True):
+        st.switch_page("pages/3_🗂️_Dataset_Explorer.py")
+
+st.divider()
 
 # Sidebar
 with st.sidebar:
@@ -66,9 +66,7 @@ with st.sidebar:
         </div>
     </div>
     """, unsafe_allow_html=True)
-    
     st.divider()
-    
     st.caption("Team GMora • Clinical AI Research")
 
 # Main Content
@@ -110,21 +108,6 @@ with col2:
         <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.75rem;">Clinical Decision Support</div>
     </div>
     """, unsafe_allow_html=True)
-
-# Action Buttons
-col_btn1, col_btn2, col_btn3 = st.columns(3)
-
-with col_btn1:
-    if st.button("🔬 Start Analysis", type="primary", use_container_width=True):
-        st.switch_page("pages/1_🔬_Live_Prediction.py")
-
-with col_btn2:
-    if st.button("📊 View Metrics", use_container_width=True):
-        st.switch_page("pages/2_📊_Model_Insights.py")
-
-with col_btn3:
-    if st.button("🗂️ Dataset Info", use_container_width=True):
-        st.switch_page("pages/3_🗂️_Dataset_Explorer.py")
 
 st.divider()
 

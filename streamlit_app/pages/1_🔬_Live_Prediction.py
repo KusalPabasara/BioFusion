@@ -30,6 +30,23 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# ============ TOP NAVIGATION BAR ============
+nav_cols = st.columns(4)
+with nav_cols[0]:
+    if st.button("🏠 Home", use_container_width=True):
+        st.switch_page("app.py")
+with nav_cols[1]:
+    if st.button("🔬 Predict", use_container_width=True, type="primary"):
+        st.switch_page("pages/1_🔬_Live_Prediction.py")
+with nav_cols[2]:
+    if st.button("📊 Metrics", use_container_width=True):
+        st.switch_page("pages/2_📊_Model_Insights.py")
+with nav_cols[3]:
+    if st.button("🗂️ Dataset", use_container_width=True):
+        st.switch_page("pages/3_🗂️_Dataset_Explorer.py")
+
+st.divider()
+
 # Sidebar
 with st.sidebar:
     st.markdown("""
