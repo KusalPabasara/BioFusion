@@ -1,13 +1,16 @@
+# Note: Streamlit automatically follows system theme when no base theme is set
+# or when base="light" with proper browser detection
+
 [theme]
-base = "dark"
+# Use light as base - Streamlit will auto-detect and switch to dark when system is dark
+base = "light"
 primaryColor = "#3b82f6"
-backgroundColor = "#0f172a"
-secondaryBackgroundColor = "#1e293b"
-textColor = "#f8fafc"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f8fafc"
+textColor = "#0f172a"
 font = "sans serif"
 
 [client]
-# Enable theme switching
 showSidebarNavigation = true
 
 [server]
