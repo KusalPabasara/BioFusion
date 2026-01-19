@@ -1,9 +1,5 @@
-# Streamlit configuration - no theme colors specified to allow full auto-detection
-
-[theme]
-# No colors defined - Streamlit will auto-detect system theme and use built-in light/dark
-primaryColor = "#3b82f6"
-font = "sans serif"
+# Streamlit configuration
+# No [theme] section = Streamlit uses system preference automatically
 
 [client]
 showSidebarNavigation = true
