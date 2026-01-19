@@ -23,15 +23,20 @@ st.set_page_config(
     layout="wide"
 )
 
-# Professional CSS
+# Initialize theme in session state
+if 'theme' not in st.session_state:
+    st.session_state.theme = 'dark'
+
+# Professional CSS with Light/Dark Mode and Mobile Responsiveness
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 
 <style>
     :root {
-        --bg-primary: #1a1a2e;
-        --bg-card: #1f2937;
+        --bg-primary: #0f172a;
+        --bg-secondary: #1e293b;
+        --bg-card: #1e293b;
         --text-primary: #f8fafc;
         --text-secondary: #94a3b8;
         --text-muted: #64748b;
@@ -39,52 +44,70 @@ st.markdown("""
         --accent-success: #22c55e;
         --accent-danger: #ef4444;
         --border-color: #334155;
+        --shadow: rgba(0, 0, 0, 0.3);
     }
     
-    .main { font-family: 'Inter', sans-serif; }
+    [data-theme="light"] {
+        --bg-primary: #f8fafc;
+        --bg-secondary: #ffffff;
+        --bg-card: #ffffff;
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --text-muted: #64748b;
+        --accent-primary: #2563eb;
+        --accent-success: #16a34a;
+        --accent-danger: #dc2626;
+        --border-color: #e2e8f0;
+        --shadow: rgba(0, 0, 0, 0.1);
+    }
+    
+    .main, .stApp { font-family: 'Inter', sans-serif; background-color: var(--bg-primary) !important; }
     #MainMenu, footer, header { visibility: hidden; }
+    [data-testid="stSidebar"] { background: var(--bg-secondary) !important; }
     
     .page-header {
         display: flex;
         align-items: center;
         gap: 0.75rem;
         margin-bottom: 0.5rem;
+        flex-wrap: wrap;
     }
     
     .page-title {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
         font-weight: 700;
         color: var(--text-primary);
     }
     
     .page-subtitle {
         color: var(--text-secondary);
-        font-size: 0.95rem;
-        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
     }
     
     .card {
         background: var(--bg-card);
         border: 1px solid var(--border-color);
         border-radius: 12px;
-        padding: 1.5rem;
+        padding: 1.25rem;
+        box-shadow: 0 2px 8px var(--shadow);
     }
     
     .card-title {
-        font-size: 0.875rem;
+        font-size: 0.85rem;
         font-weight: 600;
         color: var(--text-primary);
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
     }
     
     .upload-zone {
         background: var(--bg-card);
         border: 2px dashed var(--border-color);
         border-radius: 12px;
-        padding: 3rem;
+        padding: 2rem 1rem;
         text-align: center;
         transition: border-color 0.2s ease;
     }
@@ -97,36 +120,31 @@ st.markdown("""
         background: var(--bg-card);
         border: 2px solid var(--border-color);
         border-radius: 12px;
-        padding: 2rem;
+        padding: 1.5rem;
         text-align: center;
     }
     
-    .result-card.normal {
-        border-color: var(--accent-success);
-    }
-    
-    .result-card.pneumonia {
-        border-color: var(--accent-danger);
-    }
+    .result-card.normal { border-color: var(--accent-success); }
+    .result-card.pneumonia { border-color: var(--accent-danger); }
     
     .result-label {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         font-weight: 700;
-        margin: 1rem 0 0.5rem;
+        margin: 0.75rem 0 0.25rem;
     }
     
     .result-normal { color: var(--accent-success); }
     .result-pneumonia { color: var(--accent-danger); }
     
     .confidence-value {
-        font-size: 2rem;
+        font-size: 1.75rem;
         font-weight: 700;
     }
     
     .progress-bar {
         background: var(--border-color);
         border-radius: 4px;
-        height: 8px;
+        height: 6px;
         overflow: hidden;
         margin-top: 0.5rem;
     }
@@ -140,46 +158,35 @@ st.markdown("""
         background: rgba(245, 158, 11, 0.1);
         border: 1px solid rgba(245, 158, 11, 0.3);
         border-radius: 10px;
-        padding: 1rem 1.25rem;
+        padding: 0.75rem 1rem;
         display: flex;
         align-items: flex-start;
         gap: 0.75rem;
-        margin-top: 1.5rem;
+        margin-top: 1rem;
     }
     
-    .alert-icon {
-        color: #f59e0b;
-        flex-shrink: 0;
-    }
-    
-    .alert-content {
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-    }
+    .alert-icon { color: #f59e0b; flex-shrink: 0; }
+    .alert-content { font-size: 0.8rem; color: var(--text-secondary); }
     
     .divider {
         height: 1px;
         background: var(--border-color);
-        margin: 1.5rem 0;
+        margin: 1.25rem 0;
     }
     
-    .info-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
+    .info-list { list-style: none; padding: 0; margin: 0; }
     
     .info-list li {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        padding: 0.375rem 0;
-        font-size: 0.875rem;
+        padding: 0.3rem 0;
+        font-size: 0.8rem;
         color: var(--text-secondary);
     }
     
     .info-list .material-symbols-outlined {
-        font-size: 16px;
+        font-size: 14px;
         color: var(--accent-primary);
     }
     
@@ -187,13 +194,34 @@ st.markdown("""
         font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         vertical-align: middle;
     }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .page-title { font-size: 1.25rem; }
+        .page-subtitle { font-size: 0.85rem; }
+        .card { padding: 1rem; }
+        .result-label { font-size: 1.1rem; }
+        .confidence-value { font-size: 1.5rem; }
+        .upload-zone { padding: 1.5rem 1rem; }
+        .alert-content { font-size: 0.75rem; }
+    }
+    
+    @media (max-width: 480px) {
+        .page-title { font-size: 1.1rem; }
+        .result-card { padding: 1rem; }
+        .confidence-value { font-size: 1.25rem; }
+    }
 </style>
 """, unsafe_allow_html=True)
+
+# Apply theme
+theme_class = "light" if st.session_state.theme == "light" else "dark"
+st.markdown(f'<script>document.documentElement.setAttribute("data-theme", "{theme_class}");</script>', unsafe_allow_html=True)
 
 # Page Header
 st.markdown("""
 <div class="page-header">
-    <span class="material-symbols-outlined" style="font-size: 32px; color: #3b82f6;">radiology</span>
+    <span class="material-symbols-outlined" style="font-size: 28px; color: var(--accent-primary);">radiology</span>
     <span class="page-title">Live Analysis</span>
 </div>
 <p class="page-subtitle">Upload a chest X-ray image for real-time pneumonia detection with AI-powered visualization.</p>
@@ -204,20 +232,17 @@ st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 # Initialize model (cached)
 @st.cache_resource
 def get_model():
-    """Load model once and cache it."""
     return load_model()
 
-# Load model with spinner
 with st.spinner("Loading AI model..."):
     model, device = get_model()
 
-# Model status
 device_name = "GPU (CUDA)" if "cuda" in str(device) else "CPU"
 st.markdown(f"""
-<div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; background: rgba(34, 197, 94, 0.1); border-radius: 8px; border: 1px solid rgba(34, 197, 94, 0.2); margin-bottom: 1.5rem;">
-    <span class="material-symbols-outlined" style="color: #22c55e; font-size: 20px;">check_circle</span>
-    <span style="color: #22c55e; font-size: 0.875rem; font-weight: 500;">Model loaded successfully</span>
-    <span style="color: #64748b; font-size: 0.875rem; margin-left: 0.5rem;">Running on {device_name}</span>
+<div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; background: rgba(34, 197, 94, 0.1); border-radius: 8px; border: 1px solid rgba(34, 197, 94, 0.2); margin-bottom: 1rem; flex-wrap: wrap;">
+    <span class="material-symbols-outlined" style="color: #22c55e; font-size: 18px;">check_circle</span>
+    <span style="color: #22c55e; font-size: 0.8rem; font-weight: 500;">Model loaded</span>
+    <span style="color: var(--text-muted); font-size: 0.8rem;">• {device_name}</span>
 </div>
 """, unsafe_allow_html=True)
 
@@ -235,7 +260,7 @@ with col_upload:
     uploaded_file = st.file_uploader(
         "Choose a chest X-ray image",
         type=["jpg", "jpeg", "png", "bmp"],
-        help="Upload a frontal chest X-ray image (JPEG or PNG format)",
+        help="Upload a frontal chest X-ray image",
         label_visibility="collapsed"
     )
 
@@ -247,22 +272,10 @@ with col_info:
             Guidelines
         </div>
         <ul class="info-list">
-            <li>
-                <span class="material-symbols-outlined">check</span>
-                Use frontal (PA/AP) chest X-rays
-            </li>
-            <li>
-                <span class="material-symbols-outlined">check</span>
-                Ensure image is clear and well-exposed
-            </li>
-            <li>
-                <span class="material-symbols-outlined">check</span>
-                Optimized for pediatric X-rays
-            </li>
-            <li>
-                <span class="material-symbols-outlined">check</span>
-                Supported: JPG, PNG, BMP
-            </li>
+            <li><span class="material-symbols-outlined">check</span>Use frontal chest X-rays</li>
+            <li><span class="material-symbols-outlined">check</span>Ensure clear exposure</li>
+            <li><span class="material-symbols-outlined">check</span>Optimized for pediatric</li>
+            <li><span class="material-symbols-outlined">check</span>JPG, PNG, BMP</li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
@@ -271,87 +284,53 @@ with col_info:
 if uploaded_file is not None:
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
     
-    # Load and display original image
     image = load_image(uploaded_file)
-    
-    # Create columns for display
     col1, col2, col3 = st.columns([1, 1, 1])
     
     with col1:
-        st.markdown("""
-        <div class="card-title">
-            <span class="material-symbols-outlined">image</span>
-            Original X-Ray
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown('<div class="card-title"><span class="material-symbols-outlined">image</span>Original</div>', unsafe_allow_html=True)
         st.image(image, use_container_width=True)
     
-    # Make prediction
-    with st.spinner("Analyzing X-ray..."):
-        # Preprocess
+    with st.spinner("Analyzing..."):
         input_tensor = preprocess_image(image)
-        
-        # Predict
         pred_class, confidence, probabilities = predict(model, input_tensor, device)
         pred_label = get_prediction_label(pred_class)
         
-        # Generate Grad-CAM
         try:
-            heatmap, overlay = create_gradcam_visualization(
-                model, input_tensor, image, device, pred_class
-            )
+            heatmap, overlay = create_gradcam_visualization(model, input_tensor, image, device, pred_class)
             gradcam_success = True
         except Exception as e:
             gradcam_success = False
     
-    # Display Grad-CAM
     with col2:
-        st.markdown("""
-        <div class="card-title">
-            <span class="material-symbols-outlined">visibility</span>
-            Attention Heatmap
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown('<div class="card-title"><span class="material-symbols-outlined">visibility</span>Heatmap</div>', unsafe_allow_html=True)
         if gradcam_success:
             st.image(overlay, use_container_width=True)
         else:
-            st.info("Heatmap not available")
+            st.info("Heatmap unavailable")
     
-    # Display prediction result
     with col3:
-        st.markdown("""
-        <div class="card-title">
-            <span class="material-symbols-outlined">diagnosis</span>
-            Analysis Result
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown('<div class="card-title"><span class="material-symbols-outlined">diagnosis</span>Result</div>', unsafe_allow_html=True)
         
         is_pneumonia = pred_label == "PNEUMONIA"
         result_class = "pneumonia" if is_pneumonia else "normal"
         label_class = "result-pneumonia" if is_pneumonia else "result-normal"
         icon = "error" if is_pneumonia else "check_circle"
         icon_color = "#ef4444" if is_pneumonia else "#22c55e"
-        conf_color = "#ef4444" if is_pneumonia else "#22c55e"
         
         st.markdown(f"""
         <div class="result-card {result_class}">
-            <span class="material-symbols-outlined" style="font-size: 48px; color: {icon_color};">{icon}</span>
+            <span class="material-symbols-outlined" style="font-size: 40px; color: {icon_color};">{icon}</span>
             <div class="result-label {label_class}">{pred_label}</div>
-            <div style="color: #64748b; font-size: 0.875rem; margin-bottom: 1rem;">Detection Result</div>
-            <div class="confidence-value" style="color: {conf_color};">{confidence*100:.1f}%</div>
-            <div style="color: #64748b; font-size: 0.75rem;">Confidence Score</div>
+            <div style="color: var(--text-muted); font-size: 0.75rem; margin-bottom: 0.75rem;">Detection Result</div>
+            <div class="confidence-value" style="color: {icon_color};">{confidence*100:.1f}%</div>
+            <div style="color: var(--text-muted); font-size: 0.7rem;">Confidence</div>
         </div>
         """, unsafe_allow_html=True)
     
-    # Probability distribution
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
     
-    st.markdown("""
-    <div class="card-title">
-        <span class="material-symbols-outlined">bar_chart</span>
-        Probability Distribution
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown('<div class="card-title"><span class="material-symbols-outlined">bar_chart</span>Probability</div>', unsafe_allow_html=True)
     
     prob_col1, prob_col2 = st.columns(2)
     
@@ -360,15 +339,10 @@ if uploaded_file is not None:
         st.markdown(f"""
         <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #22c55e; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
-                    <span class="material-symbols-outlined" style="font-size: 18px;">check_circle</span>
-                    Normal
-                </span>
-                <span style="color: #22c55e; font-weight: 600;">{normal_prob:.1f}%</span>
+                <span style="color: #22c55e; font-weight: 500; font-size: 0.85rem;">Normal</span>
+                <span style="color: #22c55e; font-weight: 600; font-size: 0.85rem;">{normal_prob:.1f}%</span>
             </div>
-            <div class="progress-bar">
-                <div class="progress-fill" style="background: #22c55e; width: {normal_prob}%;"></div>
-            </div>
+            <div class="progress-bar"><div class="progress-fill" style="background: #22c55e; width: {normal_prob}%;"></div></div>
         </div>
         """, unsafe_allow_html=True)
     
@@ -377,83 +351,65 @@ if uploaded_file is not None:
         st.markdown(f"""
         <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #ef4444; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
-                    <span class="material-symbols-outlined" style="font-size: 18px;">error</span>
-                    Pneumonia
-                </span>
-                <span style="color: #ef4444; font-weight: 600;">{pneumonia_prob:.1f}%</span>
+                <span style="color: #ef4444; font-weight: 500; font-size: 0.85rem;">Pneumonia</span>
+                <span style="color: #ef4444; font-weight: 600; font-size: 0.85rem;">{pneumonia_prob:.1f}%</span>
             </div>
-            <div class="progress-bar">
-                <div class="progress-fill" style="background: #ef4444; width: {pneumonia_prob}%;"></div>
-            </div>
+            <div class="progress-bar"><div class="progress-fill" style="background: #ef4444; width: {pneumonia_prob}%;"></div></div>
         </div>
         """, unsafe_allow_html=True)
     
-    # Clinical disclaimer
     st.markdown("""
     <div class="alert">
         <span class="material-symbols-outlined alert-icon">warning</span>
         <div class="alert-content">
-            <strong>Clinical Disclaimer:</strong> This AI tool is for research and demonstration purposes only. 
-            It should not be used as the sole basis for clinical decisions. 
-            Always consult a qualified healthcare professional for medical diagnosis.
+            <strong>Disclaimer:</strong> For research/demo only. Consult healthcare professionals for diagnosis.
         </div>
     </div>
     """, unsafe_allow_html=True)
 
 else:
-    # Show placeholder when no image uploaded
     st.markdown("""
     <div class="upload-zone">
-        <span class="material-symbols-outlined" style="font-size: 48px; color: #64748b;">cloud_upload</span>
-        <div style="color: #94a3b8; font-size: 1rem; margin-top: 1rem;">
-            Drop your chest X-ray image here or click to browse
-        </div>
-        <div style="color: #64748b; font-size: 0.875rem; margin-top: 0.5rem;">
-            Supported formats: JPG, PNG, BMP
-        </div>
+        <span class="material-symbols-outlined" style="font-size: 40px; color: var(--text-muted);">cloud_upload</span>
+        <div style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.75rem;">Drop X-ray image here or click to browse</div>
+        <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.25rem;">JPG, PNG, BMP</div>
     </div>
     """, unsafe_allow_html=True)
 
-# Sidebar info
+# Sidebar
 with st.sidebar:
     st.markdown("""
-    <div style="padding: 1rem 0;">
-        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
-            <span class="material-symbols-outlined" style="font-size: 32px; color: #3b82f6;">pulmonology</span>
+    <div style="padding: 0.75rem 0;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span class="material-symbols-outlined" style="font-size: 28px; color: var(--accent-primary);">pulmonology</span>
             <div>
-                <div style="font-weight: 600; color: #f8fafc;">BioFusion</div>
-                <div style="font-size: 0.75rem; color: #64748b;">Hackathon 2026</div>
+                <div style="font-weight: 600; color: var(--text-primary); font-size: 0.95rem;">BioFusion</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">Hackathon 2026</div>
             </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
     
+    # Theme toggle
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("☀️ Light", use_container_width=True, type="secondary" if st.session_state.theme == "dark" else "primary"):
+            st.session_state.theme = "light"
+            st.rerun()
+    with col2:
+        if st.button("🌙 Dark", use_container_width=True, type="secondary" if st.session_state.theme == "light" else "primary"):
+            st.session_state.theme = "dark"
+            st.rerun()
+    
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
     
     st.markdown(f"""
     <div class="card">
-        <div class="card-title">
-            <span class="material-symbols-outlined">memory</span>
-            Model Information
-        </div>
+        <div class="card-title"><span class="material-symbols-outlined">memory</span>Model Info</div>
         <ul class="info-list">
-            <li>
-                <span class="material-symbols-outlined">architecture</span>
-                ResNet50
-            </li>
-            <li>
-                <span class="material-symbols-outlined">aspect_ratio</span>
-                224 x 224 input
-            </li>
-            <li>
-                <span class="material-symbols-outlined">developer_board</span>
-                {device_name}
-            </li>
-            <li>
-                <span class="material-symbols-outlined">category</span>
-                Normal / Pneumonia
-            </li>
+            <li><span class="material-symbols-outlined">architecture</span>ResNet50</li>
+            <li><span class="material-symbols-outlined">aspect_ratio</span>224×224</li>
+            <li><span class="material-symbols-outlined">developer_board</span>{device_name}</li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
