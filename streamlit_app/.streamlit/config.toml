@@ -1,16 +1,8 @@
-# Streamlit theme configuration for automatic system theme detection
-# When base is not set or commented out, Streamlit uses system preference
+# Streamlit configuration - no theme colors specified to allow full auto-detection
 
 [theme]
-# Commenting out base to let Streamlit auto-detect system theme
-# base = "light"
+# No colors defined - Streamlit will auto-detect system theme and use built-in light/dark
 primaryColor = "#3b82f6"
-
-# Light mode colors (used when system is in light mode)
-backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f8fafc"
-textColor = "#0f172a"
-
 font = "sans serif"
 
 [client]
