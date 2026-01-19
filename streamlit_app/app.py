@@ -1,7 +1,7 @@
 """
 Pneumonia Detection - Clinical Decision Support System
 BioFusion Hackathon 2026 | Team GMora
-Professional Streamlit Demo with Light/Dark Mode and Mobile Responsive Design
+Professional Streamlit Demo with System Theme Detection and Mobile Responsive Design
 """
 
 import streamlit as st
@@ -11,38 +11,17 @@ st.set_page_config(
     page_title="Pneumonia Detection | BioFusion",
     page_icon="🫁",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="auto"
 )
 
-# Initialize theme in session state
-if 'theme' not in st.session_state:
-    st.session_state.theme = 'dark'
-
-# Professional CSS with Light/Dark Mode and Mobile Responsiveness
+# Professional CSS with System Theme Detection (prefers-color-scheme) and Mobile Responsive
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 
 <style>
-    /* CSS Variables for Theming */
+    /* ============ LIGHT MODE (Default) ============ */
     :root {
-        /* Dark Theme (default) */
-        --bg-primary: #0f172a;
-        --bg-secondary: #1e293b;
-        --bg-card: #1e293b;
-        --text-primary: #f8fafc;
-        --text-secondary: #94a3b8;
-        --text-muted: #64748b;
-        --accent-primary: #3b82f6;
-        --accent-success: #22c55e;
-        --accent-warning: #f59e0b;
-        --accent-danger: #ef4444;
-        --border-color: #334155;
-        --shadow: rgba(0, 0, 0, 0.3);
-    }
-    
-    /* Light Theme */
-    [data-theme="light"] {
         --bg-primary: #f8fafc;
         --bg-secondary: #ffffff;
         --bg-card: #ffffff;
@@ -54,31 +33,43 @@ st.markdown("""
         --accent-warning: #d97706;
         --accent-danger: #dc2626;
         --border-color: #e2e8f0;
-        --shadow: rgba(0, 0, 0, 0.1);
+        --shadow: rgba(0, 0, 0, 0.08);
     }
     
-    /* Global Styles */
+    /* ============ DARK MODE (System Preference) ============ */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-primary: #3b82f6;
+            --accent-success: #22c55e;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --border-color: #334155;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+    }
+    
+    /* ============ GLOBAL STYLES ============ */
     .main, .stApp {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        background-color: var(--bg-primary) !important;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
     }
     
     /* Hide Streamlit Branding */
     #MainMenu, footer, header {visibility: hidden;}
+    .stDeployButton {display: none;}
     
-    /* Card Component */
+    /* ============ CARD COMPONENT ============ */
     .card {
         background: var(--bg-card);
         border: 1px solid var(--border-color);
         border-radius: 12px;
         padding: 1.5rem;
-        transition: all 0.2s ease;
         box-shadow: 0 2px 8px var(--shadow);
-    }
-    
-    .card:hover {
-        border-color: var(--accent-primary);
-        transform: translateY(-2px);
     }
     
     .card-title {
@@ -91,7 +82,7 @@ st.markdown("""
         gap: 0.5rem;
     }
     
-    /* Stat Component */
+    /* ============ STAT COMPONENT ============ */
     .stat {
         background: var(--bg-card);
         border: 1px solid var(--border-color);
@@ -123,10 +114,8 @@ st.markdown("""
         margin-top: 0.25rem;
     }
     
-    /* Hero Section */
-    .hero {
-        padding: 1.5rem 0;
-    }
+    /* ============ HERO SECTION ============ */
+    .hero { padding: 1.5rem 0; }
     
     .hero-title {
         font-size: 2rem;
@@ -152,7 +141,7 @@ st.markdown("""
         max-width: 600px;
     }
     
-    /* Badge Component */
+    /* ============ BADGE COMPONENT ============ */
     .badge {
         display: inline-flex;
         align-items: center;
@@ -173,7 +162,7 @@ st.markdown("""
         color: var(--accent-success);
     }
     
-    /* Feature Card */
+    /* ============ FEATURE CARD ============ */
     .feature-card {
         background: var(--bg-card);
         border: 1px solid var(--border-color);
@@ -212,7 +201,7 @@ st.markdown("""
         line-height: 1.5;
     }
     
-    /* Section Headers */
+    /* ============ SECTION HEADERS ============ */
     .section-header {
         font-size: 1.1rem;
         font-weight: 600;
@@ -223,58 +212,14 @@ st.markdown("""
         gap: 0.5rem;
     }
     
-    /* Divider */
+    /* ============ DIVIDER ============ */
     .divider {
         height: 1px;
         background: var(--border-color);
         margin: 1.5rem 0;
     }
     
-    /* Theme Toggle Button */
-    .theme-toggle {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        cursor: pointer;
-        color: var(--text-primary);
-        font-size: 0.85rem;
-        transition: all 0.2s ease;
-    }
-    
-    .theme-toggle:hover {
-        border-color: var(--accent-primary);
-    }
-    
-    /* Sidebar Styling */
-    [data-testid="stSidebar"] {
-        background: var(--bg-secondary) !important;
-    }
-    
-    [data-testid="stSidebar"] .stMarkdown {
-        font-family: 'Inter', sans-serif;
-    }
-    
-    /* Footer */
-    .footer {
-        text-align: center;
-        padding: 1.5rem;
-        color: var(--text-muted);
-        border-top: 1px solid var(--border-color);
-        margin-top: 2rem;
-        font-size: 0.8rem;
-    }
-    
-    /* Material Icons */
-    .material-symbols-outlined {
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        vertical-align: middle;
-    }
-    
-    /* List Styles */
+    /* ============ LIST STYLES ============ */
     .check-list {
         list-style: none;
         padding: 0;
@@ -295,62 +240,55 @@ st.markdown("""
         font-size: 16px;
     }
     
+    /* ============ FOOTER ============ */
+    .footer {
+        text-align: center;
+        padding: 1.5rem;
+        color: var(--text-muted);
+        border-top: 1px solid var(--border-color);
+        margin-top: 2rem;
+        font-size: 0.8rem;
+    }
+    
+    /* ============ MATERIAL ICONS ============ */
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        vertical-align: middle;
+    }
+    
     /* ============ MOBILE RESPONSIVE STYLES ============ */
     
-    /* Tablets and below */
+    /* Tablets */
     @media (max-width: 992px) {
-        .hero-title {
-            font-size: 1.75rem;
-        }
-        
-        .stat-value {
-            font-size: 1.5rem;
-        }
-        
-        .feature-card {
-            padding: 1rem;
-        }
+        .hero-title { font-size: 1.75rem; }
+        .stat-value { font-size: 1.5rem; }
+        .feature-card { padding: 1rem; }
     }
     
     /* Mobile phones */
     @media (max-width: 768px) {
-        .hero {
-            padding: 1rem 0;
-        }
+        .hero { padding: 1rem 0; }
         
         .hero-title {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             gap: 0.5rem;
         }
         
         .hero-title .material-symbols-outlined {
-            font-size: 28px !important;
+            font-size: 26px !important;
         }
         
-        .hero-subtitle {
-            font-size: 0.9rem;
-        }
-        
-        .hero-description {
-            font-size: 0.85rem;
-        }
+        .hero-subtitle { font-size: 0.9rem; }
+        .hero-description { font-size: 0.85rem; }
         
         .card, .stat, .feature-card {
             padding: 1rem;
             border-radius: 10px;
         }
         
-        .stat-value {
-            font-size: 1.35rem;
-        }
-        
-        .stat-label {
-            font-size: 0.65rem;
-        }
-        
-        .section-header {
-            font-size: 1rem;
-        }
+        .stat-value { font-size: 1.35rem; }
+        .stat-label { font-size: 0.6rem; }
+        .section-header { font-size: 1rem; }
         
         .feature-icon {
             width: 38px;
@@ -361,61 +299,21 @@ st.markdown("""
             font-size: 18px;
         }
         
-        .feature-title {
-            font-size: 0.9rem;
-        }
-        
-        .feature-desc {
-            font-size: 0.75rem;
-        }
-        
-        .divider {
-            margin: 1rem 0;
-        }
-        
-        .footer {
-            padding: 1rem;
-            font-size: 0.75rem;
-        }
-        
-        .badge {
-            font-size: 0.7rem;
-            padding: 0.2rem 0.5rem;
-        }
+        .feature-title { font-size: 0.9rem; }
+        .feature-desc { font-size: 0.75rem; }
+        .divider { margin: 1rem 0; }
+        .footer { padding: 1rem; font-size: 0.75rem; }
+        .badge { font-size: 0.7rem; padding: 0.2rem 0.5rem; }
     }
     
     /* Small mobile phones */
     @media (max-width: 480px) {
-        .hero-title {
-            font-size: 1.25rem;
-        }
-        
-        .stat-value {
-            font-size: 1.2rem;
-        }
-        
-        .card-title {
-            font-size: 0.9rem;
-        }
-    }
-    
-    /* Streamlit specific responsive fixes */
-    @media (max-width: 768px) {
-        [data-testid="stSidebar"] {
-            min-width: 200px !important;
-        }
-        
-        .stButton > button {
-            font-size: 0.85rem !important;
-            padding: 0.5rem 1rem !important;
-        }
+        .hero-title { font-size: 1.2rem; }
+        .stat-value { font-size: 1.15rem; }
+        .card-title { font-size: 0.9rem; }
     }
 </style>
 """, unsafe_allow_html=True)
-
-# Apply theme class to body
-theme_class = "light" if st.session_state.theme == "light" else "dark"
-st.markdown(f'<script>document.documentElement.setAttribute("data-theme", "{theme_class}");</script>', unsafe_allow_html=True)
 
 # Sidebar
 with st.sidebar:
@@ -431,28 +329,17 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
     
-    # Theme toggle
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("☀️ Light", use_container_width=True, type="secondary" if st.session_state.theme == "dark" else "primary"):
-            st.session_state.theme = "light"
-            st.rerun()
-    with col2:
-        if st.button("🌙 Dark", use_container_width=True, type="secondary" if st.session_state.theme == "light" else "primary"):
-            st.session_state.theme = "dark"
-            st.rerun()
-    
-    st.markdown('<div class="divider" style="margin: 1rem 0;"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="divider" style="margin: 0.75rem 0;"></div>', unsafe_allow_html=True)
     
     st.markdown("""
-    <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 0.5rem; padding-left: 0.5rem;">
+    <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 0.5rem; padding-left: 0.25rem;">
         Navigation
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown("""
-    <div style="padding: 0 0.5rem; margin-top: 1rem;">
-        <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.25rem;">Team GMora</div>
+    <div style="padding: 0.5rem 0; margin-top: 1rem;">
+        <div style="font-size: 0.7rem; color: var(--text-muted);">Team GMora</div>
         <div style="font-size: 0.65rem; color: var(--text-muted);">Clinical AI Research</div>
     </div>
     """, unsafe_allow_html=True)
@@ -462,7 +349,7 @@ with st.sidebar:
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    st.markdown(f"""
+    st.markdown("""
     <div class="hero">
         <div class="hero-title">
             <span class="material-symbols-outlined" style="font-size: 36px; color: var(--accent-primary);">pulmonology</span>

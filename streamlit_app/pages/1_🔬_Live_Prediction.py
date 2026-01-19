@@ -7,49 +7,27 @@ import streamlit as st
 import sys
 from pathlib import Path
 
-# Add utils to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from utils import load_model, predict, get_prediction_label, preprocess_image, load_image
 from utils import create_gradcam_visualization
 
-import numpy as np
-from PIL import Image
-
 # Page config
 st.set_page_config(
     page_title="Live Prediction | Pneumonia Detection",
     page_icon="🫁",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="auto"
 )
 
-# Initialize theme in session state
-if 'theme' not in st.session_state:
-    st.session_state.theme = 'dark'
-
-# Professional CSS with Light/Dark Mode and Mobile Responsiveness
+# CSS with System Theme Detection
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 
 <style>
     :root {
-        --bg-primary: #0f172a;
-        --bg-secondary: #1e293b;
-        --bg-card: #1e293b;
-        --text-primary: #f8fafc;
-        --text-secondary: #94a3b8;
-        --text-muted: #64748b;
-        --accent-primary: #3b82f6;
-        --accent-success: #22c55e;
-        --accent-danger: #ef4444;
-        --border-color: #334155;
-        --shadow: rgba(0, 0, 0, 0.3);
-    }
-    
-    [data-theme="light"] {
         --bg-primary: #f8fafc;
-        --bg-secondary: #ffffff;
         --bg-card: #ffffff;
         --text-primary: #0f172a;
         --text-secondary: #475569;
@@ -58,32 +36,31 @@ st.markdown("""
         --accent-success: #16a34a;
         --accent-danger: #dc2626;
         --border-color: #e2e8f0;
-        --shadow: rgba(0, 0, 0, 0.1);
+        --shadow: rgba(0, 0, 0, 0.08);
     }
     
-    .main, .stApp { font-family: 'Inter', sans-serif; background-color: var(--bg-primary) !important; }
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-primary: #3b82f6;
+            --accent-success: #22c55e;
+            --accent-danger: #ef4444;
+            --border-color: #334155;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+    }
+    
+    .main, .stApp { font-family: 'Inter', sans-serif !important; }
     #MainMenu, footer, header { visibility: hidden; }
-    [data-testid="stSidebar"] { background: var(--bg-secondary) !important; }
+    .stDeployButton { display: none; }
     
-    .page-header {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 0.5rem;
-        flex-wrap: wrap;
-    }
-    
-    .page-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--text-primary);
-    }
-    
-    .page-subtitle {
-        color: var(--text-secondary);
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
-    }
+    .page-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+    .page-title { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); }
+    .page-subtitle { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem; }
     
     .card {
         background: var(--bg-card);
@@ -109,11 +86,6 @@ st.markdown("""
         border-radius: 12px;
         padding: 2rem 1rem;
         text-align: center;
-        transition: border-color 0.2s ease;
-    }
-    
-    .upload-zone:hover {
-        border-color: var(--accent-primary);
     }
     
     .result-card {
@@ -127,32 +99,13 @@ st.markdown("""
     .result-card.normal { border-color: var(--accent-success); }
     .result-card.pneumonia { border-color: var(--accent-danger); }
     
-    .result-label {
-        font-size: 1.25rem;
-        font-weight: 700;
-        margin: 0.75rem 0 0.25rem;
-    }
-    
+    .result-label { font-size: 1.25rem; font-weight: 700; margin: 0.75rem 0 0.25rem; }
     .result-normal { color: var(--accent-success); }
     .result-pneumonia { color: var(--accent-danger); }
+    .confidence-value { font-size: 1.75rem; font-weight: 700; }
     
-    .confidence-value {
-        font-size: 1.75rem;
-        font-weight: 700;
-    }
-    
-    .progress-bar {
-        background: var(--border-color);
-        border-radius: 4px;
-        height: 6px;
-        overflow: hidden;
-        margin-top: 0.5rem;
-    }
-    
-    .progress-fill {
-        height: 100%;
-        border-radius: 4px;
-    }
+    .progress-bar { background: var(--border-color); border-radius: 4px; height: 6px; overflow: hidden; margin-top: 0.5rem; }
+    .progress-fill { height: 100%; border-radius: 4px; }
     
     .alert {
         background: rgba(245, 158, 11, 0.1);
@@ -165,45 +118,20 @@ st.markdown("""
         margin-top: 1rem;
     }
     
-    .alert-icon { color: #f59e0b; flex-shrink: 0; }
-    .alert-content { font-size: 0.8rem; color: var(--text-secondary); }
-    
-    .divider {
-        height: 1px;
-        background: var(--border-color);
-        margin: 1.25rem 0;
-    }
+    .divider { height: 1px; background: var(--border-color); margin: 1.25rem 0; }
     
     .info-list { list-style: none; padding: 0; margin: 0; }
+    .info-list li { display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; font-size: 0.8rem; color: var(--text-secondary); }
+    .info-list .material-symbols-outlined { font-size: 14px; color: var(--accent-primary); }
     
-    .info-list li {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.3rem 0;
-        font-size: 0.8rem;
-        color: var(--text-secondary);
-    }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
     
-    .info-list .material-symbols-outlined {
-        font-size: 14px;
-        color: var(--accent-primary);
-    }
-    
-    .material-symbols-outlined {
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        vertical-align: middle;
-    }
-    
-    /* Mobile Responsive */
     @media (max-width: 768px) {
         .page-title { font-size: 1.25rem; }
-        .page-subtitle { font-size: 0.85rem; }
         .card { padding: 1rem; }
         .result-label { font-size: 1.1rem; }
         .confidence-value { font-size: 1.5rem; }
         .upload-zone { padding: 1.5rem 1rem; }
-        .alert-content { font-size: 0.75rem; }
     }
     
     @media (max-width: 480px) {
@@ -213,10 +141,6 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-
-# Apply theme
-theme_class = "light" if st.session_state.theme == "light" else "dark"
-st.markdown(f'<script>document.documentElement.setAttribute("data-theme", "{theme_class}");</script>', unsafe_allow_html=True)
 
 # Page Header
 st.markdown("""
@@ -229,7 +153,7 @@ st.markdown("""
 
 st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-# Initialize model (cached)
+# Initialize model
 @st.cache_resource
 def get_model():
     return load_model()
@@ -250,27 +174,13 @@ st.markdown(f"""
 col_upload, col_info = st.columns([2, 1])
 
 with col_upload:
-    st.markdown("""
-    <div class="card-title">
-        <span class="material-symbols-outlined">upload_file</span>
-        Upload Chest X-Ray
-    </div>
-    """, unsafe_allow_html=True)
-    
-    uploaded_file = st.file_uploader(
-        "Choose a chest X-ray image",
-        type=["jpg", "jpeg", "png", "bmp"],
-        help="Upload a frontal chest X-ray image",
-        label_visibility="collapsed"
-    )
+    st.markdown('<div class="card-title"><span class="material-symbols-outlined">upload_file</span>Upload Chest X-Ray</div>', unsafe_allow_html=True)
+    uploaded_file = st.file_uploader("Choose a chest X-ray image", type=["jpg", "jpeg", "png", "bmp"], label_visibility="collapsed")
 
 with col_info:
     st.markdown("""
     <div class="card">
-        <div class="card-title">
-            <span class="material-symbols-outlined">tips_and_updates</span>
-            Guidelines
-        </div>
+        <div class="card-title"><span class="material-symbols-outlined">tips_and_updates</span>Guidelines</div>
         <ul class="info-list">
             <li><span class="material-symbols-outlined">check</span>Use frontal chest X-rays</li>
             <li><span class="material-symbols-outlined">check</span>Ensure clear exposure</li>
@@ -299,7 +209,7 @@ if uploaded_file is not None:
         try:
             heatmap, overlay = create_gradcam_visualization(model, input_tensor, image, device, pred_class)
             gradcam_success = True
-        except Exception as e:
+        except:
             gradcam_success = False
     
     with col2:
@@ -329,7 +239,6 @@ if uploaded_file is not None:
         """, unsafe_allow_html=True)
     
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
-    
     st.markdown('<div class="card-title"><span class="material-symbols-outlined">bar_chart</span>Probability</div>', unsafe_allow_html=True)
     
     prob_col1, prob_col2 = st.columns(2)
@@ -360,10 +269,8 @@ if uploaded_file is not None:
     
     st.markdown("""
     <div class="alert">
-        <span class="material-symbols-outlined alert-icon">warning</span>
-        <div class="alert-content">
-            <strong>Disclaimer:</strong> For research/demo only. Consult healthcare professionals for diagnosis.
-        </div>
+        <span class="material-symbols-outlined" style="color: #f59e0b;">warning</span>
+        <div style="font-size: 0.8rem; color: var(--text-secondary);"><strong>Disclaimer:</strong> For research/demo only. Consult healthcare professionals for diagnosis.</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -389,17 +296,6 @@ with st.sidebar:
         </div>
     </div>
     """, unsafe_allow_html=True)
-    
-    # Theme toggle
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("☀️ Light", use_container_width=True, type="secondary" if st.session_state.theme == "dark" else "primary"):
-            st.session_state.theme = "light"
-            st.rerun()
-    with col2:
-        if st.button("🌙 Dark", use_container_width=True, type="secondary" if st.session_state.theme == "light" else "primary"):
-            st.session_state.theme = "dark"
-            st.rerun()
     
     st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
     
