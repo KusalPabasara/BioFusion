@@ -6,6 +6,10 @@ secondaryBackgroundColor = "#1e293b"
 textColor = "#f8fafc"
 font = "sans serif"
 
+[client]
+# Enable theme switching
+showSidebarNavigation = true
+
 [server]
 headless = true
 enableCORS = false

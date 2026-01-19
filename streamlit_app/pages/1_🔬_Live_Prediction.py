@@ -131,11 +131,11 @@ if uploaded_file is not None:
     prob_col1, prob_col2 = st.columns(2)
     
     with prob_col1:
-        normal_prob = probabilities[0] * 100
+        normal_prob = float(probabilities[0] * 100)
         st.progress(normal_prob / 100, text=f"Normal: {normal_prob:.1f}%")
     
     with prob_col2:
-        pneumonia_prob = probabilities[1] * 100
+        pneumonia_prob = float(probabilities[1] * 100)
         st.progress(pneumonia_prob / 100, text=f"Pneumonia: {pneumonia_prob:.1f}%")
     
     st.warning("⚠️ **Disclaimer:** For research/demo only. Consult healthcare professionals for diagnosis.")
