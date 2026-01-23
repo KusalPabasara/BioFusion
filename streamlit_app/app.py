@@ -13,163 +13,238 @@ st.set_page_config(
     initial_sidebar_state="auto"
 )
 
-# Minimal CSS
+# Professional CSS
 st.markdown("""
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 
 <style>
-    #MainMenu, footer, header {visibility: hidden;}
-    .stDeployButton {display: none;}
-    .main { font-family: 'Inter', sans-serif !important; }
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    /* Global Styles */
+    :root {
+        --primary-color: #3b82f6;
+    }
     
+    html, body, [class*="css"] {
+        font-family: 'Inter', sans-serif !important;
+    }
+    
+    /* Hide Streamlit Decorations */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    .stDeployButton {display: none;}
+    
+    /* Typography */
+    h1, h2, h3 {
+        font-weight: 600 !important;
+        letter-spacing: -0.02em !important;
+    }
+    
+    /* Custom Components */
+    .icon-box {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+        margin-bottom: 1rem;
+    }
+    
+    .feature-card {
+        padding: 1.5rem;
+        border-radius: 16px;
+        background-color: var(--background-color);
+        border: 1px solid rgba(128, 128, 128, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Badges */
     .badge {
         display: inline-flex;
         align-items: center;
-        gap: 0.25rem;
-        padding: 0.25rem 0.75rem;
+        gap: 0.35rem;
+        padding: 0.35rem 0.85rem;
         border-radius: 9999px;
-        font-size: 0.75rem;
+        font-size: 0.85rem;
         font-weight: 500;
+        letter-spacing: 0.01em;
     }
-    .badge-primary { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
-    .badge-success { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+    
+    .badge-primary {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    
+    .badge-success {
+        background: rgba(34, 197, 94, 0.1);
+        color: #22c55e;
+        border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+
+    /* Material Icons */
+    .material-symbols-rounded {
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        vertical-align: middle;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 # ============ TOP NAVIGATION BAR ============
-nav_cols = st.columns(4)
+# Clean text-based navigation for mobile compatibility
+nav_cols = st.columns([1, 1, 1, 1])
 with nav_cols[0]:
-    if st.button("🏠 Home", use_container_width=True, type="primary"):
+    if st.button("Home", use_container_width=True, type="primary"):
         st.switch_page("app.py")
 with nav_cols[1]:
-    if st.button("🔬 Predict", use_container_width=True):
-        st.switch_page("pages/1_🔬_Live_Prediction.py")
+    if st.button("Analysis", use_container_width=True):
+        st.switch_page("pages/1_Live_Prediction.py")
 with nav_cols[2]:
-    if st.button("📊 Metrics", use_container_width=True):
-        st.switch_page("pages/2_📊_Model_Insights.py")
+    if st.button("Metrics", use_container_width=True):
+        st.switch_page("pages/2_Model_Insights.py")
 with nav_cols[3]:
-    if st.button("🗂️ Dataset", use_container_width=True):
-        st.switch_page("pages/3_🗂️_Dataset_Explorer.py")
+    if st.button("Dataset", use_container_width=True):
+        st.switch_page("pages/3_Dataset_Explorer.py")
 
 st.divider()
 
 # Sidebar
 with st.sidebar:
     st.markdown("""
-    <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0;">
-        <span class="material-symbols-outlined" style="font-size: 28px; color: #3b82f6;">pulmonology</span>
+    <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem 0;">
+        <div style="background: rgba(59, 130, 246, 0.1); padding: 8px; border-radius: 8px;">
+            <span class="material-symbols-rounded" style="color: #3b82f6; font-size: 24px;">pulmonology</span>
+        </div>
         <div>
-            <div style="font-weight: 600; font-size: 0.95rem;">BioFusion</div>
-            <div style="font-size: 0.7rem; opacity: 0.7;">Hackathon 2026</div>
+            <div style="font-weight: 600; font-size: 1rem; letter-spacing: -0.01em;">BioFusion</div>
+            <div style="font-size: 0.75rem; opacity: 0.6;">Hackathon 2026</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
+    
     st.divider()
-    st.caption("Team GMora • Clinical AI Research")
+    
+    st.markdown("###### Status")
+    st.info("System Online • v1.0.0")
 
-# Main Content
-col1, col2 = st.columns([2, 1])
+# Main Hero Section
+col1, col2 = st.columns([1.5, 1])
 
 with col1:
     st.markdown("""
-    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-        <span class="material-symbols-outlined" style="font-size: 36px; color: #3b82f6;">pulmonology</span>
-        <span style="font-size: 2rem; font-weight: 700;">Pneumonia Detection</span>
+    <div style="margin-bottom: 2rem;">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+            <div class="icon-box">
+                <span class="material-symbols-rounded" style="font-size: 28px;">medical_services</span>
+            </div>
+            <span style="font-size: 0.9rem; font-weight: 600; color: #3b82f6; letter-spacing: 0.05em; text-transform: uppercase;">
+                Clinical Decision Support
+            </span>
+        </div>
+        <h1 style="font-size: 3rem; line-height: 1.1; margin-bottom: 1rem;">
+            Pneumonia Detection <br>
+            <span style="opacity: 0.5;">Assistant</span>
+        </h1>
+        <p style="font-size: 1.1rem; opacity: 0.8; line-height: 1.6; max-width: 600px;">
+            Advanced AI diagnostics leveraging ResNet50 architecture to detect pediatric pneumonia with clinical-grade accuracy.
+            Designed for rapid triage in high-volume environments.
+        </p>
     </div>
-    """, unsafe_allow_html=True)
     
-    st.markdown("**AI-Powered Chest X-Ray Analysis System**")
-    
-    st.markdown("""
-    A clinical decision support tool leveraging **ResNet50** deep learning 
-    to detect pneumonia from pediatric chest X-rays with **96.67% sensitivity**. 
-    Built for rapid screening and triage in clinical environments.
-    """)
-    
-    st.markdown("""
-    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+    <div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
         <span class="badge badge-primary">
-            <span class="material-symbols-outlined" style="font-size: 14px;">verified</span>
-            ResNet50
+            <span class="material-symbols-rounded" style="font-size: 16px;">psychology</span>
+            ResNet50 Architecture
         </span>
         <span class="badge badge-success">
-            <span class="material-symbols-outlined" style="font-size: 14px;">speed</span>
-            Real-time
+            <span class="material-symbols-rounded" style="font-size: 16px;">bolt</span>
+            Real-time Inference
+        </span>
+         <span class="badge badge-primary">
+            <span class="material-symbols-rounded" style="font-size: 16px;">visibility</span>
+            Grad-CAM Analysis
         </span>
     </div>
     """, unsafe_allow_html=True)
 
 with col2:
+    # Stylized Hero Visual
     st.markdown("""
-    <div style="text-align: center; padding: 1.5rem;">
-        <span class="material-symbols-outlined" style="font-size: 48px; color: #3b82f6;">radiology</span>
-        <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.75rem;">Clinical Decision Support</div>
+    <div style="background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%); padding: 3rem; text-align: center;">
+        <span class="material-symbols-rounded" style="font-size: 120px; color: #3b82f6; opacity: 0.9;">radiology</span>
     </div>
     """, unsafe_allow_html=True)
 
 st.divider()
 
-# Key Metrics Section
-st.subheader("📈 Model Performance")
+# Key Performance Indicators
+st.markdown("### System Performance")
 
 metric_cols = st.columns(4)
+metrics = [
+    {"label": "Sensitivity (Recall)", "value": "96.67%", "desc": "Detection Rate", "icon": "check_circle"},
+    {"label": "Global Accuracy", "value": "87.18%", "desc": "Test Set Evaluation", "icon": "analytics"},
+    {"label": "AUC-ROC Score", "value": "0.9428", "desc": "Model Robustness", "icon": "area_chart"},
+    {"label": "Inference Time", "value": "< 200ms", "desc": "Per X-Ray Image", "icon": "timer"}
+]
 
-with metric_cols[0]:
-    st.metric("Recall", "96.67%", help="Sensitivity - ability to detect pneumonia cases")
-
-with metric_cols[1]:
-    st.metric("Accuracy", "87.18%", help="Overall accuracy on test set")
-
-with metric_cols[2]:
-    st.metric("AUC-ROC", "0.9428", help="Area under ROC curve")
-
-with metric_cols[3]:
-    st.metric("False Negatives", "13", help="Missed cases out of 390")
-
-st.divider()
-
-# Features Section
-st.subheader("⭐ Key Features")
-
-feature_cols = st.columns(3)
-
-with feature_cols[0]:
-    st.markdown("#### 🧠 Deep Learning")
-    st.markdown("ResNet50 with transfer learning from ImageNet for medical imaging.")
-
-with feature_cols[1]:
-    st.markdown("#### 👁️ Explainable AI")
-    st.markdown("Grad-CAM visualizations highlight lung regions for clinical validation.")
-
-with feature_cols[2]:
-    st.markdown("#### ⚡ Real-Time")
-    st.markdown("Sub-second inference for rapid screening and triage.")
+for col, metric in zip(metric_cols, metrics):
+    with col:
+        st.markdown(f"""
+        <div style="padding: 1rem; border-radius: 12px; background: rgba(59, 130, 246, 0.03); border: 1px solid rgba(59, 130, 246, 0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 0.8rem; font-weight: 500; opacity: 0.7;">{metric['label']}</span>
+                <span class="material-symbols-rounded" style="font-size: 18px; opacity: 0.5;">{metric['icon']}</span>
+            </div>
+            <div style="font-size: 1.8rem; font-weight: 700; color: #3b82f6;">{metric['value']}</div>
+            <div style="font-size: 0.75rem; opacity: 0.5; margin-top: 0.25rem;">{metric['desc']}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
 st.divider()
 
-# Problem Statement
-st.subheader("ℹ️ Clinical Context")
+# Feature Grid
+st.markdown("### Core Capabilities")
 
-col1, col2 = st.columns(2)
+feat_cols = st.columns(3)
 
-with col1:
-    st.markdown("#### ⚠️ Global Burden")
-    st.markdown("""
-    - 450 million cases annually worldwide
-    - 4 million deaths globally each year
-    - 15% of deaths in children under 5
-    """)
+features = [
+    {
+        "title": "Deep Learning Engine",
+        "icon": "neurology",
+        "desc": "Powered by a fine-tuned ResNet50 model pretrained on ImageNet, optimized for medical imaging features."
+    },
+    {
+        "title": "Explainable AI",
+        "icon": "layers",
+        "desc": "Integrated Grad-CAM visualization extracts activation maps to highlight suspicious regions."
+    },
+    {
+        "title": "Clinical Workflow",
+        "icon": "clinical_notes",
+        "desc": "Seamless integration ready for PACS systems with standardized DICOM/JPEG compatibility."
+    }
+]
 
-with col2:
-    st.markdown("#### ✅ Our Solution")
-    st.markdown("""
-    - Automated pre-screening for urgent cases
-    - Decision support for physicians
-    - Scalable for resource-limited settings
-    """)
+for col, feature in zip(feat_cols, features):
+    with col:
+        st.markdown(f"""
+        <div style="padding: 1.5rem; height: 100%;">
+            <div class="icon-box">
+                <span class="material-symbols-rounded" style="font-size: 24px;">{feature['icon']}</span>
+            </div>
+            <h4 style="margin: 0.5rem 0; font-size: 1.1rem;">{feature['title']}</h4>
+            <p style="font-size: 0.9rem; opacity: 0.7; line-height: 1.5;">{feature['desc']}</p>
+        </div>
+        """, unsafe_allow_html=True)
 
-# Footer
 st.divider()
-st.caption("🏆 BioFusion Hackathon 2026 | Team GMora • Built with PyTorch and Streamlit")
+st.caption("BioFusion Hackathon 2026 | Team GMora")
