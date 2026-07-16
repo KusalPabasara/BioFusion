@@ -131,13 +131,18 @@ def render_mobile_navbar(current_page="Prediction"):
         selected = option_menu(
             menu_title=None,
             options=["Home", "Prediction", "Insights", "Dataset"],
-            icons=["house", "camera", "graph-up", "database"],
+            icons=[
+                "house-door-fill" if current_page == "Home" else "house-door",
+                "eye-fill" if current_page == "Prediction" else "eye",
+                "pie-chart-fill" if current_page == "Insights" else "pie-chart",
+                "folder-fill" if current_page == "Dataset" else "folder"
+            ],
             menu_icon="cast",
             default_index=["Home", "Prediction", "Insights", "Dataset"].index(current_page),
             orientation="horizontal",
             styles={
                 "container": {"padding": "0!important", "margin": "0!important", "border-radius": "0", "background-color": "#ffffff"},
-                "icon": {"color": "#4B5563", "font-size": "22px", "margin": "0"}, 
+                "icon": {"font-size": "22px", "margin": "0"}, 
                 "nav-link": {
                     "font-size": "11px", 
                     "text-align": "center", 
@@ -154,7 +159,6 @@ def render_mobile_navbar(current_page="Prediction"):
                     "background-color": "transparent", 
                     "color": "#0066CC", 
                     "font-weight": "600",
-                    "border-top": "3px solid #0066CC",
                     "border-radius": "0"
                 },
             }

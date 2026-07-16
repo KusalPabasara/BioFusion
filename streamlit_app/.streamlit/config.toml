@@ -11,5 +11,6 @@ showSidebarNavigation = true
 
 [server]
 headless = true
+enableStaticServing = true
 enableCORS = false
 port = 8501

@@ -51,6 +51,71 @@ from utils.device import is_mobile
 
 ui.inject_theme()
 ui.top_nav(active="Home")
+
+if is_mobile() and not st.session_state.get('install_dismissed', False):
+    c1, c2 = st.columns([0.85, 0.15])
+    with c1:
+        st.markdown("#### Install it like an app")
+    with c2:
+        if st.button("✖", key="dismiss_install", help="Dismiss"):
+            st.session_state.install_dismissed = True
+            st.rerun()
+            
+    st.markdown(
+        "Add BioFusion to your phone's home screen for one-tap access and full-screen "
+        "camera capture — no app store needed."
+    )
+    components.html(
+        """
+        <div style="font-family:'Inter',system-ui,sans-serif;">
+          <button id="bf-install" style="display:none; padding:0.7rem 1.3rem; border:0;
+            border-radius:10px; background:#0066CC; color:#fff; font-weight:600;
+            font-size:0.95rem; cursor:pointer;">⬇  Install app</button>
+          <div id="bf-hint" style="color:#475569; font-size:0.9rem; line-height:1.5;">
+            On <b>Android/Chrome</b>: tap the menu (⋮) → <b>Install app</b>.<br>
+            On <b>iPhone/Safari</b>: tap Share → <b>Add to Home Screen</b>.
+          </div>
+        </div>
+        <script>
+          // Inject PWA Manifest if missing
+          const parentDoc = window.parent.document;
+          if (!parentDoc.querySelector('link[rel="manifest"]')) {
+              const manifest = parentDoc.createElement('link');
+              manifest.rel = 'manifest';
+              manifest.href = '/app/static/manifest.json';
+              parentDoc.head.appendChild(manifest);
+          }
+          // Register SW
+          if ('serviceWorker' in window.parent.navigator) {
+              window.parent.navigator.serviceWorker.register('/app/static/sw.js');
+          }
+
+          let deferred = null;
+          const btn = document.getElementById('bf-install');
+          const hint = document.getElementById('bf-hint');
+          
+          window.parent.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault(); deferred = e;
+            btn.style.display = 'inline-block';
+            hint.style.display = 'none';
+          });
+          btn.addEventListener('click', async () => {
+            if (!deferred) return;
+            deferred.prompt();
+            await deferred.userChoice;
+            deferred = null; btn.style.display = 'none';
+          });
+          window.parent.addEventListener('appinstalled', () => {
+            btn.style.display = 'none';
+            hint.innerHTML = '✅ Installed — find BioFusion on your home screen.';
+            hint.style.display = 'block';
+          });
+        </script>
+        """,
+        height=110,
+    )
+    st.divider()
+
 if not is_mobile():
     st.divider()
 
@@ -132,10 +197,24 @@ if not is_mobile():
               </div>
             </div>
             <script>
+              // Inject PWA Manifest if missing
+              const parentDoc = window.parent.document;
+              if (!parentDoc.querySelector('link[rel="manifest"]')) {
+                  const manifest = parentDoc.createElement('link');
+                  manifest.rel = 'manifest';
+                  manifest.href = '/app/static/manifest.json';
+                  parentDoc.head.appendChild(manifest);
+              }
+              // Register SW
+              if ('serviceWorker' in window.parent.navigator) {
+                  window.parent.navigator.serviceWorker.register('/app/static/sw.js');
+              }
+
               let deferred = null;
               const btn = document.getElementById('bf-install');
               const hint = document.getElementById('bf-hint');
-              window.addEventListener('beforeinstallprompt', (e) => {
+              
+              window.parent.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault(); deferred = e;
                 btn.style.display = 'inline-block';
                 hint.style.display = 'none';
@@ -146,7 +225,7 @@ if not is_mobile():
                 await deferred.userChoice;
                 deferred = null; btn.style.display = 'none';
               });
-              window.addEventListener('appinstalled', () => {
+              window.parent.addEventListener('appinstalled', () => {
                 btn.style.display = 'none';
                 hint.innerHTML = '✅ Installed — find BioFusion on your home screen.';
                 hint.style.display = 'block';

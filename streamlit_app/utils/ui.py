@@ -60,9 +60,12 @@ _GLOBAL_CSS = """
 
   /* Primary buttons (aqryl) */
   .stButton > button[kind="primary"], .stButton > button[data-testid="baseButton-primary"] {
-    background: var(--primary); color: var(--white); border: 0; border-radius: var(--radius-md);
+    background: var(--primary); color: var(--white) !important; border: 0; border-radius: var(--radius-md);
     font-family: var(--font-ui); font-size: 16px; font-weight: 400; line-height: 24px;
     padding: 12px 24px; min-height: 44px;
+  }
+  .stButton > button[kind="primary"] p, .stButton > button[data-testid="baseButton-primary"] p {
+    color: var(--white) !important;
   }
   .stButton > button[kind="primary"]:hover { background: var(--primary-hover); }
   .stButton > button[kind="primary"]:active { background: var(--primary-active); }
@@ -139,6 +142,19 @@ _GLOBAL_CSS = """
     box-shadow: 0 12px 20px -4px rgba(0,0,0,0.12), 0 6px 8px -3px rgba(0,0,0,0.08);
     border-color: rgba(0,0,0,0.15);
   }
+
+  /* Static (Fixed) Desktop Navbar */
+  div[class*="st-key-desktop_nav_container"] {
+    position: fixed;
+    top: 2.875rem; /* Streamlit header height */
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 3rem);
+    max-width: 800px;
+    z-index: 99999;
+    background: transparent;
+  }
+
 
   /* Split Pane Results Container */
   .bf-split-pane {
@@ -264,18 +280,69 @@ def top_nav(active: str = ""):
     if is_mobile():
         return
 
-    pages = [
-        ("Home", "app.py"),
-        ("Screening", "pages/1_Live_Prediction.py"),
-        ("Model", "pages/2_Model_Insights.py"),
-        ("Dataset", "pages/3_Dataset_Explorer.py"),
+    from streamlit_option_menu import option_menu
+    
+    pages = ["Home", "Screening", "Model", "Dataset"]
+    targets = {
+        "Home": "app.py",
+        "Screening": "pages/1_Live_Prediction.py",
+        "Model": "pages/2_Model_Insights.py",
+        "Dataset": "pages/3_Dataset_Explorer.py",
+    }
+    
+    icons = [
+        "house-door-fill" if active == "Home" else "house-door",
+        "eye-fill" if active == "Screening" else "eye",
+        "pie-chart-fill" if active == "Model" else "pie-chart",
+        "folder-fill" if active == "Dataset" else "folder"
     ]
-    cols = st.columns(len(pages))
-    for col, (name, target) in zip(cols, pages):
-        with col:
-            kind = "primary" if name == active else "secondary"
-            if st.button(name, use_container_width=True, type=kind, key=f"nav_{name}"):
-                st.switch_page(target)
+    
+    default_index = pages.index(active) if active in pages else 0
+
+    with st.container(key="desktop_nav_container"):
+        selected = option_menu(
+            menu_title=None,
+            options=pages,
+            icons=icons,
+            menu_icon="cast",
+            default_index=default_index,
+            orientation="horizontal",
+            styles={
+                "container": {
+                    "padding": "4px", 
+                    "margin": "0!important", 
+                    "border-radius": "10px", 
+                    "background-color": "#ffffff",
+                    "border": "1px solid #e5e7eb",
+                },
+                "icon": {"font-size": "16px", "margin": "0 8px 0 0"}, 
+                "nav-link": {
+                    "font-size": "15px", 
+                    "text-align": "center", 
+                    "margin": "0px 4px", 
+                    "padding": "10px 16px", 
+                    "color": "#4B5563",
+                    "display": "flex",
+                    "flex-direction": "row",
+                    "align-items": "center",
+                    "justify-content": "center",
+                    "border-radius": "8px",
+                    "--hover-color": "#f3f4f6"
+                },
+                "nav-link-selected": {
+                    "background-color": "#f0f7ff", 
+                    "color": "#0066CC", 
+                    "font-weight": "600"
+                },
+            },
+            key="desktop_nav"
+        )
+        
+    if selected != active:
+        st.switch_page(targets[selected])
+        
+    # Spacer to prevent content from jumping up under the fixed navbar
+    st.write("<div style='height: 65px'></div>", unsafe_allow_html=True)
 
 
 # --------------------------------------------------------------------------- #
