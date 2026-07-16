@@ -10,6 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from utils import ui
+from utils.device import is_mobile, render_mobile_navbar
 
 # Page config
 st.set_page_config(
@@ -21,7 +22,8 @@ st.set_page_config(
 
 ui.inject_theme()
 ui.top_nav(active="Dataset")
-st.divider()
+if not is_mobile():
+    st.divider()
 
 # Page Header
 ui.page_header("Dataset analytics", "Cohort demographics and quality assurance")
@@ -119,3 +121,6 @@ for col, (title, desc) in zip(quality_cols, quality_metrics):
             <div style="font-size:0.85rem; color:var(--ink-60); line-height:1.5;">{desc}</div>
         </div>
         """, unsafe_allow_html=True)
+
+if is_mobile():
+    render_mobile_navbar("Dataset")

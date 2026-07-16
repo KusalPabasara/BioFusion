@@ -12,6 +12,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from utils import ui
+from utils.device import is_mobile, render_mobile_navbar
 
 # Load real metrics produced by train_model.py (training_metrics.json at the
 # project root) when available; otherwise fall back to the documented baseline.
@@ -40,19 +41,17 @@ st.set_page_config(
 
 ui.inject_theme()
 ui.top_nav(active="Model")
-st.divider()
+if not is_mobile():
+    st.divider()
 
 # Page Header
 ui.page_header("Model performance", "Quantitative evaluation & validation")
 
-if not USING_REAL_METRICS:
+if not USING_REAL_METRICS and not is_mobile():
     st.info(
         "Showing the documented baseline metrics. Run `python train_model.py` to "
         "generate `training_metrics.json` and display live results from your trained model."
     )
-
-# Metrics
-cols = st.columns(6)
 
 if USING_REAL_METRICS:
     rep = _metrics["test_report"]
@@ -77,15 +76,28 @@ else:
         ("Specificity", "70.09%", "TNR"),
     ]
 
-for col, (label, value, desc) in zip(cols, metrics_data):
-    with col:
-        st.markdown(f"""
-        <div style="margin-bottom: 1rem;">
-            <div style="font-size: 0.8rem; opacity: 0.7; font-weight: 500;">{label}</div>
-            <div style="font-size: 1.6rem; font-weight: 700; color: #0066CC; letter-spacing: -0.02em;">{value}</div>
-            <div style="font-size: 0.7rem; opacity: 0.5;">{desc}</div>
-        </div>
-        """, unsafe_allow_html=True)
+if is_mobile():
+    grid_html = '<div style="display: grid; grid-template-columns: 1fr 1fr; row-gap: 24px; text-align: center;">\n'
+    for label, value, desc in metrics_data:
+        grid_html += f"""<div style="margin-bottom: 1rem;">
+<div style="font-size: 0.8rem; opacity: 0.7; font-weight: 500;">{label}</div>
+<div style="font-size: 1.6rem; font-weight: 700; color: #0066CC; letter-spacing: -0.02em;">{value}</div>
+<div style="font-size: 0.7rem; opacity: 0.5;">{desc}</div>
+</div>
+"""
+    grid_html += '</div>'
+    st.markdown(grid_html, unsafe_allow_html=True)
+else:
+    cols = st.columns(6)
+    for col, (label, value, desc) in zip(cols, metrics_data):
+        with col:
+            st.markdown(f"""
+            <div style="margin-bottom: 1rem;">
+                <div style="font-size: 0.8rem; opacity: 0.7; font-weight: 500;">{label}</div>
+                <div style="font-size: 1.6rem; font-weight: 700; color: #0066CC; letter-spacing: -0.02em;">{value}</div>
+                <div style="font-size: 0.7rem; opacity: 0.5;">{desc}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
 # Fail-safe operating point + overfitting evidence (from the enhanced trainer).
 if USING_REAL_METRICS and _metrics.get("operating_point"):
@@ -245,3 +257,6 @@ with col2:
     fig_acc.add_trace(go.Scatter(x=epochs, y=val_acc, mode='lines+markers', name='Val', line=dict(color='#059669', width=2)))
     fig_acc.update_layout(title="Accuracy", height=280, margin=dict(l=10, r=10, t=40, b=10), font=dict(family="Helvetica, Arial, sans-serif"), plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
     st.plotly_chart(fig_acc, use_container_width=True)
+
+if is_mobile():
+    render_mobile_navbar("Insights")

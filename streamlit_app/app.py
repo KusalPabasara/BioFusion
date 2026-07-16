@@ -42,115 +42,154 @@ def _load_landing_metrics():
     ]
 
 
-st.set_page_config(page_title="BioFusion — Pneumonia Screening", page_icon="🫁",
+st.set_page_config(page_title="BioFusion — Pneumonia Screening",
                    layout="wide", initial_sidebar_state="collapsed")
+
+from utils.device import is_mobile
+# if is_mobile():
+#     st.switch_page("pages/1_Live_Prediction.py")
 
 ui.inject_theme()
 ui.top_nav(active="Home")
-st.divider()
+if not is_mobile():
+    st.divider()
 
 # --- hero ------------------------------------------------------------------ #
 hero_l, hero_r = st.columns([1.4, 1])
 with hero_l:
-    st.markdown("""
-    <span class="bf-badge bf-badge-primary">Clinical decision support</span>
-    <h1 style="font-size:2.9rem; line-height:1.08; margin:1rem 0 0.8rem;">
-        Screen a chest X-ray<br>for pneumonia in seconds.
-    </h1>
-    <p style="font-size:1.1rem; color:var(--ink-60); max-width:52ch;">
-        Take a photo with your phone or upload an X-ray. A fail-safe AI model
-        highlights signs of pneumonia and tells you what to do next — for
-        patients, parents, and clinicians alike.
-    </p>
-    """, unsafe_allow_html=True)
-    st.write("")
-    if st.button("Start screening  →", type="primary", use_container_width=False):
-        st.switch_page("pages/1_Live_Prediction.py")
+    if is_mobile():
+        st.markdown("""
+        <div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <span class="bf-badge bf-badge-primary">Clinical decision support</span>
+            <h1 style="font-size:2.4rem; line-height:1.1; margin:1rem 0 0.8rem;">
+                Screen a chest X-ray<br>for pneumonia in seconds.
+            </h1>
+            <p style="font-size:1.1rem; color:var(--ink-60); max-width:52ch;">
+                Take a photo with your phone or upload an X-ray. A fail-safe AI model
+                highlights signs of pneumonia and tells you what to do next — for
+                patients, parents, and clinicians alike.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        st.write("")
+        if st.button("Start screening  →", type="primary", use_container_width=True):
+            st.switch_page("pages/1_Live_Prediction.py")
+    else:
+        st.markdown("""
+        <span class="bf-badge bf-badge-primary">Clinical decision support</span>
+        <h1 style="font-size:2.9rem; line-height:1.08; margin:1rem 0 0.8rem;">
+            Screen a chest X-ray<br>for pneumonia in seconds.
+        </h1>
+        <p style="font-size:1.1rem; color:var(--ink-60); max-width:52ch;">
+            Take a photo with your phone or upload an X-ray. A fail-safe AI model
+            highlights signs of pneumonia and tells you what to do next — for
+            patients, parents, and clinicians alike.
+        </p>
+        """, unsafe_allow_html=True)
+        st.write("")
+        if st.button("Start screening  →", type="primary", use_container_width=False):
+            st.switch_page("pages/1_Live_Prediction.py")
 
 with hero_r:
-    # Clean inline SVG (no webfont dependency) — a stylised lungs mark.
-    st.markdown("""
-    <div style="display:flex; justify-content:center; align-items:center; min-height:220px;">
-      <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Lungs">
-        <rect x="6" y="6" width="188" height="188" rx="44" fill="#EAF2FC"/>
-        <path d="M100 48 v46" stroke="#0066CC" stroke-width="7" stroke-linecap="round"/>
-        <circle cx="100" cy="46" r="9" fill="#0066CC"/>
-        <path d="M100 84 C 86 96, 74 96, 66 106" stroke="#0066CC" stroke-width="6" stroke-linecap="round"/>
-        <path d="M100 84 C 114 96, 126 96, 134 106" stroke="#0066CC" stroke-width="6" stroke-linecap="round"/>
-        <path d="M70 96 C 44 104, 40 140, 52 158 C 62 172, 82 166, 84 148 L 84 104 C 84 98, 76 94, 70 96 Z" fill="#0066CC"/>
-        <path d="M130 96 C 156 104, 160 140, 148 158 C 138 172, 118 166, 116 148 L 116 104 C 116 98, 124 94, 130 96 Z" fill="#0066CC"/>
-      </svg>
-    </div>
-    """, unsafe_allow_html=True)
-
-st.divider()
-
-# --- install as an app (PWA) ---------------------------------------------- #
-inst_l, inst_r = st.columns([1.5, 1])
-with inst_l:
-    st.markdown("#### Install it like an app")
-    st.markdown(
-        "Add BioFusion to your phone's home screen for one-tap access and full-screen "
-        "camera capture — no app store needed."
-    )
-    # The install button uses the browser's install prompt when available, with a
-    # clear manual fallback for iOS (which has no beforeinstallprompt event).
-    components.html(
-        """
-        <div style="font-family:'Inter',system-ui,sans-serif;">
-          <button id="bf-install" style="display:none; padding:0.7rem 1.3rem; border:0;
-            border-radius:10px; background:#0066CC; color:#fff; font-weight:600;
-            font-size:0.95rem; cursor:pointer;">⬇  Install app</button>
-          <div id="bf-hint" style="color:#475569; font-size:0.9rem; line-height:1.5;">
-            On <b>Android/Chrome</b>: tap the menu (⋮) → <b>Install app</b>.<br>
-            On <b>iPhone/Safari</b>: tap Share → <b>Add to Home Screen</b>.
-          </div>
+    if not is_mobile():
+        # Clean inline SVG (no webfont dependency) — a stylised lungs mark.
+        st.markdown("""
+        <div style="display:flex; justify-content:center; align-items:center; min-height:220px;">
+          <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Lungs">
+            <rect x="6" y="6" width="188" height="188" rx="44" fill="#EAF2FC"/>
+            <path d="M100 48 v46" stroke="#0066CC" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="100" cy="46" r="9" fill="#0066CC"/>
+            <path d="M100 84 C 86 96, 74 96, 66 106" stroke="#0066CC" stroke-width="6" stroke-linecap="round"/>
+            <path d="M100 84 C 114 96, 126 96, 134 106" stroke="#0066CC" stroke-width="6" stroke-linecap="round"/>
+            <path d="M70 96 C 44 104, 40 140, 52 158 C 62 172, 82 166, 84 148 L 84 104 C 84 98, 76 94, 70 96 Z" fill="#0066CC"/>
+            <path d="M130 96 C 156 104, 160 140, 148 158 C 138 172, 118 166, 116 148 L 116 104 C 116 98, 124 94, 130 96 Z" fill="#0066CC"/>
+          </svg>
         </div>
-        <script>
-          let deferred = null;
-          const btn = document.getElementById('bf-install');
-          const hint = document.getElementById('bf-hint');
-          window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); deferred = e;
-            btn.style.display = 'inline-block';
-            hint.style.display = 'none';
-          });
-          btn.addEventListener('click', async () => {
-            if (!deferred) return;
-            deferred.prompt();
-            await deferred.userChoice;
-            deferred = null; btn.style.display = 'none';
-          });
-          window.addEventListener('appinstalled', () => {
-            btn.style.display = 'none';
-            hint.innerHTML = '✅ Installed — find BioFusion on your home screen.';
-            hint.style.display = 'block';
-          });
-        </script>
-        """,
-        height=110,
-    )
-with inst_r:
-    _qr = Path(__file__).parent / "static" / "icons" / "qr.png"
-    if _qr.exists():
-        st.image(str(_qr), width=150, caption="Scan to open on your phone")
+        """, unsafe_allow_html=True)
 
-st.divider()
+if not is_mobile():
+    st.divider()
+    
+    # --- install as an app (PWA) ---------------------------------------------- #
+    inst_l, inst_r = st.columns([1.5, 1])
+    with inst_l:
+        st.markdown("#### Install it like an app")
+        st.markdown(
+            "Add BioFusion to your phone's home screen for one-tap access and full-screen "
+            "camera capture — no app store needed."
+        )
+        # The install button uses the browser's install prompt when available, with a
+        # clear manual fallback for iOS (which has no beforeinstallprompt event).
+        components.html(
+            """
+            <div style="font-family:'Inter',system-ui,sans-serif;">
+              <button id="bf-install" style="display:none; padding:0.7rem 1.3rem; border:0;
+                border-radius:10px; background:#0066CC; color:#fff; font-weight:600;
+                font-size:0.95rem; cursor:pointer;">⬇  Install app</button>
+              <div id="bf-hint" style="color:#475569; font-size:0.9rem; line-height:1.5;">
+                On <b>Android/Chrome</b>: tap the menu (⋮) → <b>Install app</b>.<br>
+                On <b>iPhone/Safari</b>: tap Share → <b>Add to Home Screen</b>.
+              </div>
+            </div>
+            <script>
+              let deferred = null;
+              const btn = document.getElementById('bf-install');
+              const hint = document.getElementById('bf-hint');
+              window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault(); deferred = e;
+                btn.style.display = 'inline-block';
+                hint.style.display = 'none';
+              });
+              btn.addEventListener('click', async () => {
+                if (!deferred) return;
+                deferred.prompt();
+                await deferred.userChoice;
+                deferred = null; btn.style.display = 'none';
+              });
+              window.addEventListener('appinstalled', () => {
+                btn.style.display = 'none';
+                hint.innerHTML = '✅ Installed — find BioFusion on your home screen.';
+                hint.style.display = 'block';
+              });
+            </script>
+            """,
+            height=110,
+        )
+    with inst_r:
+        _qr = Path(__file__).parent / "static" / "icons" / "qr.png"
+        if _qr.exists():
+            st.image(str(_qr), width=150, caption="Scan to open on your phone")
+    
+    st.divider()
 
 # --- live metrics ---------------------------------------------------------- #
 st.markdown("#### How the model performs")
 st.caption("Live numbers from the trained model (fail-safe operating point).")
-mcols = st.columns(4)
-for col, (label, value, desc) in zip(mcols, _load_landing_metrics()):
-    with col:
-        st.markdown(f"""
-        <div style="padding:0.2rem 0;">
-            <div style="font-size:0.8rem; opacity:0.65; font-weight:600;">{label}</div>
-            <div style="font-size:1.9rem; font-weight:800; color:var(--primary);
-                 letter-spacing:-0.02em; font-variant-numeric:tabular-nums;">{value}</div>
-            <div style="font-size:0.72rem; color:var(--success); font-weight:600;">{desc}</div>
-        </div>
-        """, unsafe_allow_html=True)
+
+if is_mobile():
+    metrics = _load_landing_metrics()
+    grid_html = '<div style="display: grid; grid-template-columns: 1fr 1fr; row-gap: 24px; text-align: center;">\n'
+    for label, value, desc in metrics:
+        grid_html += f"""<div style="padding:0.2rem 0;">
+<div style="font-size:0.8rem; opacity:0.65; font-weight:600;">{label}</div>
+<div style="font-size:1.9rem; font-weight:800; color:#0066CC; letter-spacing:-0.02em; font-variant-numeric:tabular-nums;">{value}</div>
+<div style="font-size:0.72rem; color:#059669; font-weight:600;">{desc}</div>
+</div>
+"""
+    grid_html += '</div>'
+    st.markdown(grid_html, unsafe_allow_html=True)
+else:
+    mcols = st.columns(4)
+    for col, (label, value, desc) in zip(mcols, _load_landing_metrics()):
+        with col:
+            st.markdown(f"""
+            <div style="padding:0.2rem 0;">
+                <div style="font-size:0.8rem; opacity:0.65; font-weight:600;">{label}</div>
+                <div style="font-size:1.9rem; font-weight:800; color:var(--primary);
+                     letter-spacing:-0.02em; font-variant-numeric:tabular-nums;">{value}</div>
+                <div style="font-size:0.72rem; color:var(--success); font-weight:600;">{desc}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
 st.divider()
 
@@ -167,10 +206,11 @@ for i, (col, (title, desc)) in enumerate(zip(scols, steps), start=1):
     with col:
         st.markdown(f"""
         <div style="padding:1.2rem; background:white; border:1px solid var(--hair);
-             border-radius:12px; height:100%;">
+             border-radius:12px; height:100%; text-align:center;
+             display:flex; flex-direction:column; justify-content:center; align-items:center;">
             <div style="width:32px;height:32px;border-radius:8px;background:var(--primary-wash);
                  color:var(--primary);font-weight:600;font-size:15px;display:flex;
-                 align-items:center;justify-content:center;">{i}</div>
+                 align-items:center;justify-content:center;margin:0 auto;">{i}</div>
             <h4 style="margin:0.7rem 0 0.3rem; font-size:1rem;">{title}</h4>
             <p style="font-size:0.88rem; color:var(--ink-60); margin:0; line-height:1.5;">{desc}</p>
         </div>
@@ -183,3 +223,13 @@ st.markdown(
     unsafe_allow_html=True,
 )
 st.caption("BioFusion 2026 · Team GMora · Built with PyTorch")
+
+from utils.device import is_mobile, render_mobile_navbar
+import sys
+import importlib
+if "utils.device" in sys.modules:
+    importlib.reload(sys.modules["utils.device"])
+from utils.device import render_mobile_navbar # re-import the reloaded function
+
+if is_mobile():
+    render_mobile_navbar("Home")

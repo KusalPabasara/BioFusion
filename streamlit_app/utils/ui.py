@@ -106,6 +106,59 @@ _GLOBAL_CSS = """
   /* Info panel (aqryl gray panel with left accent) */
   .bf-disclaimer { font-size: 12px; color: var(--ink-60); line-height: 16px;
     border-left: 4px solid var(--primary); padding: 8px 0 8px 12px; margin-top: 8px; }
+
+  /* New Structural Classes for Modernization */
+  
+  /* Step Badges */
+  .bf-step-badge {
+    display: inline-block;
+    background: #f1f5f9;
+    color: #475569;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    border: 1px solid #e2e8f0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Interactive Hover Cards */
+  [class*="st-key-hover_card"] {
+    background: var(--white);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 12px -2px rgba(0,0,0,0.08), 0 2px 6px -1px rgba(0,0,0,0.05);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 24px;
+  }
+  [class*="st-key-hover_card"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px -4px rgba(0,0,0,0.12), 0 6px 8px -3px rgba(0,0,0,0.08);
+    border-color: rgba(0,0,0,0.15);
+  }
+
+  /* Split Pane Results Container */
+  .bf-split-pane {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: flex-start;
+  }
+  @media (max-width: 768px) {
+    .bf-split-pane { flex-direction: column; }
+  }
+  .bf-pane-left { flex: 1; min-width: 0; }
+  .bf-pane-right { flex: 1; min-width: 0; }
+
+  /* Loading Pulse Animation */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .bf-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
 </style>
 """
 
@@ -170,13 +223,19 @@ def _render_analysis_frame(slot, stages, active_index, pct):
         )
     slot.markdown(f"""
     <style>@keyframes bf-spin {{ to {{ transform: rotate(360deg); }} }}</style>
-    <div class="bf-card" style="max-width:420px;">
-      <div style="font-weight:600;margin-bottom:12px;">Analysing X-ray…</div>
-      <div class="bf-meter-track" style="margin-bottom:14px;">
-        <div class="bf-meter-fill" style="width:{pct}%;background:var(--primary);
-             transition:width 0.4s ease;"></div>
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 50vh;">
+      <div class="bf-card" style="max-width:420px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; align-items: center; padding: 32px 24px;">
+        <div style="position: relative; width: 80px; height: 80px; margin-bottom: 24px;">
+          <svg viewBox="0 0 36 36" style="width: 100%; height: 100%;">
+              <path stroke="#e2e8f0" stroke-width="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path stroke="var(--primary)" stroke-width="3" stroke-dasharray="{pct}, 100" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" style="transition: stroke-dasharray 0.4s ease;" />
+          </svg>
+        </div>
+        <div class="bf-pulse" style="font-weight:600; margin-bottom: 24px; color:var(--primary); font-size: 16px;">Analysing X-ray…</div>
+        <div style="width: 100%; max-width: 280px;">
+            {''.join(rows)}
+        </div>
       </div>
-      {''.join(rows)}
     </div>
     """, unsafe_allow_html=True)
 
@@ -189,9 +248,8 @@ def page_header(title: str, subtitle: str = ""):
     sub = (f'<p style="margin:2px 0 0; color:var(--ink-60); font-size:0.95rem;">'
            f'{subtitle}</p>') if subtitle else ""
     st.markdown(f"""
-    <div style="display:flex; align-items:center; gap:14px; margin-bottom:1.4rem;">
-      <span style="width:4px; height:38px; border-radius:2px; background:var(--primary);
-            display:inline-block;"></span>
+    <div class="bf-page-header" style="display:flex; align-items:center; gap:14px; margin-bottom:1.4rem;">
+      <span class="bf-header-line" style="width:4px; height:38px; border-radius:2px; background:var(--primary); display:inline-block;"></span>
       <div>
         <h2 style="margin:0; font-size:1.6rem;">{title}</h2>
         {sub}
@@ -202,6 +260,10 @@ def page_header(title: str, subtitle: str = ""):
 
 def top_nav(active: str = ""):
     """Render the shared top navigation bar. `active` = page key to highlight."""
+    from utils.device import is_mobile
+    if is_mobile():
+        return
+
     pages = [
         ("Home", "app.py"),
         ("Screening", "pages/1_Live_Prediction.py"),
@@ -224,16 +286,37 @@ def get_role() -> str:
 
 
 def role_selector(inline: bool = True):
-    current = get_role()
-    idx = 0 if current == ROLE_PATIENT else 1
+    if "role" not in st.session_state:
+        st.session_state.role = ROLE_PATIENT
+        
+    def on_desktop_role_change():
+        if st.session_state.desktop_role_radio:
+            st.session_state.role = st.session_state.desktop_role_radio
+
+    if st.session_state.get("desktop_role_radio") != st.session_state.get("role"):
+        st.session_state.desktop_role_radio = st.session_state.get("role")
+
     choice = st.radio(
         "I am a…", [ROLE_PATIENT, ROLE_CLINICIAN],
-        index=idx, horizontal=inline, key="role_selector",
-        help="Patients get plain-language guidance; clinicians get the full "
-             "technical read-out.",
+        horizontal=inline, key="desktop_role_radio", on_change=on_desktop_role_change,
+        help="Patients get plain-language guidance; clinicians get the full technical read-out.",
     )
-    st.session_state["role"] = choice
     return choice
+
+def role_selector_mobile():
+    current = get_role()
+    idx = 0 if current == ROLE_PATIENT else 1
+    choice = st.pills(
+        "I am a…", 
+        [ROLE_PATIENT, ROLE_CLINICIAN],
+        selection_mode="single",
+        default=current,
+        key="role_selector_pills"
+    )
+    if choice:
+        st.session_state["role"] = choice
+        return choice
+    return current
 
 
 def is_clinician() -> bool:
@@ -243,7 +326,7 @@ def is_clinician() -> bool:
 # --------------------------------------------------------------------------- #
 # Result card (role-aware)
 # --------------------------------------------------------------------------- #
-def render_result_card(triage_result, clinician: bool):
+def render_result_card(triage_result, clinician: bool, is_mobile: bool = False):
     """Render the triage result, adapting depth/tone to the audience."""
     t = triage_result
     color = t.color
@@ -255,24 +338,51 @@ def render_result_card(triage_result, clinician: bool):
         "#0066CC": "rgba(0,102,204,0.10)",
     }.get(color, "rgba(0,102,204,0.10)")
     pct = t.pneumonia_prob * 100
-    st.markdown(f"""
-    <div class="bf-result" style="background:{wash}; border-color:{color}33;">
-        <div class="bf-label" style="color:{color};">
-            <span style="width:10px;height:10px;border-radius:50%;background:{color};display:inline-block;"></span>{t.label}
+    if is_mobile:
+        st.markdown(f"""
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 24px 0 32px 0;">
+            <div style="position: relative; width: 180px; height: 180px;">
+                <svg viewBox="0 0 36 36" style="width: 100%; height: 100%;">
+                    <path stroke="#e2e8f0" stroke-width="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path stroke="{color}" stroke-width="3" stroke-dasharray="{pct:.1f}, 100" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                </svg>
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                    <span style="font-size: 36px; font-weight: 700; color: {color};">{pct:.0f}%</span>
+                </div>
+            </div>
+            <div style="margin-top: 24px; font-size: 20px; font-weight: 600; color: #334155;">{t.label}</div>
+            <div style="margin-top: 8px; font-size: 15px; color: #64748b; text-align: center; max-width: 90%;">{t.patient_message}</div>
         </div>
-        <div class="bf-big" style="color:{color};">{pct:.0f}%</div>
-        <div class="bf-sub">PNEUMONIA PROBABILITY</div>
-        <div class="bf-meter-track" style="margin-top:12px;">
-            <div class="bf-meter-fill" style="width:{pct:.1f}%; background:{color};"></div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown(f"""
+        <div class="bf-result" style="background:{wash}; border-color:{color}33;">
+            <div class="bf-label" style="color:{color};">
+                <span style="width:10px;height:10px;border-radius:50%;background:{color};display:inline-block;margin-right:8px;"></span>{t.label}
+            </div>
+            <div class="bf-big" style="color:{color};">{pct:.0f}%</div>
+            <div class="bf-sub">PNEUMONIA PROBABILITY</div>
+            <div class="bf-meter-track" style="margin-top:12px;">
+                <div class="bf-meter-fill" style="width:{pct:.1f}%; background:{color};"></div>
+            </div>
+            <div class="bf-msg">{t.patient_message}</div>
         </div>
-        <div class="bf-msg">{t.patient_message}</div>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
     if t.urgent:
-        st.warning(f"**What to do next:** {t.patient_action}")
+        st.markdown(f"""
+        <div style="background-color: #fff7ed; border-radius: 6px; padding: 16px; margin: 16px 0;">
+            <div style="color: #9a3412; font-weight: 700; font-size: 14px; margin-bottom: 4px; text-align: left;">What to do next</div>
+            <div style="color: #c2410c; font-size: 14px; line-height: 1.5; text-align: left;">{t.patient_action}</div>
+        </div>
+        """, unsafe_allow_html=True)
     else:
-        st.info(f"**What to do next:** {t.patient_action}")
+        st.markdown(f"""
+        <div style="background-color: #eff6ff; border-radius: 6px; padding: 16px; margin: 16px 0;">
+            <div style="color: #1e40af; font-weight: 700; font-size: 14px; margin-bottom: 4px; text-align: left;">What to do next</div>
+            <div style="color: #1d4ed8; font-size: 14px; line-height: 1.5; text-align: left;">{t.patient_action}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
     if clinician:
         with st.container(border=True):
