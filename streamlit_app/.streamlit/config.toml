@@ -1,6 +1,9 @@
 # Streamlit configuration
 [theme]
-primaryColor = "#2563eb"
+primaryColor = "#0066CC"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#EFEFEF"
+textColor = "#000000"
 font = "sans serif"
 
 [client]
