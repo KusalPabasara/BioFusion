@@ -1,0 +1,558 @@
+<title>PneumoScan AI — Team GMora | Brainstorm 2026 Semifinal Report</title>
+<style>
+  :root{
+    --blue:#0066CC; --blue-dk:#003D7A; --blue-wash:#EAF2FC;
+    --green:#059669; --green-wash:#E7F6F0;
+    --amber:#B45309; --amber-wash:#FEF6E7;
+    --ink:#0A1A2F; --slate:#3F5168; --slate-soft:#6B7A90;
+    --hair:#E2E8F0; --hair-soft:#EEF2F7; --paper:#FFFFFF;
+    --sans:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:#8A97A8;font-family:var(--sans);color:var(--ink);
+    -webkit-font-smoothing:antialiased;line-height:1.5;}
+  /* A4 page */
+  .page{width:794px;min-height:1123px;background:var(--paper);margin:22px auto;
+    padding:56px 60px;position:relative;box-shadow:0 4px 24px rgba(0,0,0,.22);}
+  .page.cover{padding:0;overflow:hidden;}
+
+  h1,h2,h3,h4{margin:0;letter-spacing:-.01em;color:var(--ink);}
+  p{margin:0 0 10px;}
+  a{color:var(--blue);}
+
+  /* running header/footer */
+  .rh{display:flex;justify-content:space-between;align-items:center;
+    border-bottom:2px solid var(--blue);padding-bottom:8px;margin-bottom:24px;}
+  .rh .brand{font-weight:700;font-size:13px;color:var(--blue);letter-spacing:.02em;}
+  .rh .tag{font-size:11px;color:var(--slate-soft);text-transform:uppercase;letter-spacing:.08em;}
+  .foot{position:absolute;bottom:26px;left:60px;right:60px;display:flex;
+    justify-content:space-between;font-size:10.5px;color:var(--slate-soft);
+    border-top:1px solid var(--hair);padding-top:8px;}
+
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--blue);margin-bottom:6px;}
+  .sec-title{font-size:23px;font-weight:700;margin-bottom:4px;}
+  .sec-num{color:var(--blue);}
+  .lead{color:var(--slate);font-size:14.5px;margin:8px 0 18px;}
+
+  h3.sub{font-size:15px;font-weight:700;margin:18px 0 7px;color:var(--blue-dk);}
+  h4.sub{font-size:12.5px;font-weight:700;margin:14px 0 5px;text-transform:uppercase;
+    letter-spacing:.05em;color:var(--slate);}
+
+  .body{font-size:12.7px;color:var(--slate);}
+  .body p{margin:0 0 9px;}
+  .body strong{color:var(--ink);}
+  ul{margin:6px 0 10px;padding-left:18px;}
+  li{font-size:12.5px;color:var(--slate);margin-bottom:5px;}
+  li::marker{color:var(--blue);}
+
+  /* callouts */
+  .note{border-left:4px solid var(--blue);background:var(--blue-wash);
+    padding:11px 15px;border-radius:0 8px 8px 0;font-size:12.3px;color:var(--blue-dk);margin:10px 0;}
+  .note.ok{border-color:var(--green);background:var(--green-wash);color:#04563d;}
+  .note.warn{border-color:var(--amber);background:var(--amber-wash);color:#7c4a06;}
+
+  /* metric tiles */
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0;}
+  .tile{border:1px solid var(--hair);border-radius:11px;padding:13px 14px;background:#FBFCFE;}
+  .tile .v{font-size:23px;font-weight:800;color:var(--blue);letter-spacing:-.02em;line-height:1;}
+  .tile .l{font-size:10.5px;color:var(--slate-soft);font-weight:600;margin-top:5px;
+    text-transform:uppercase;letter-spacing:.04em;}
+  .tile .d{font-size:10px;color:var(--green);font-weight:600;margin-top:2px;}
+
+  /* tables */
+  table{width:100%;border-collapse:collapse;margin:10px 0 12px;font-size:12px;}
+  th{background:var(--blue);color:#fff;text-align:left;padding:8px 11px;font-weight:600;font-size:11.5px;}
+  td{padding:8px 11px;border-bottom:1px solid var(--hair);color:var(--slate);vertical-align:top;}
+  tr:nth-child(even) td{background:#F7FAFD;}
+  td strong{color:var(--ink);}
+  .comp td:nth-child(2){color:var(--slate-soft);}
+  .comp td:nth-child(3){color:var(--green);font-weight:600;}
+
+  /* two column */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .card{border:1px solid var(--hair);border-radius:12px;padding:15px 16px;background:#fff;}
+  .card h4{margin:0 0 6px;font-size:13px;color:var(--blue-dk);font-weight:700;}
+  .card p{font-size:12px;color:var(--slate);margin:0;}
+
+  /* pipeline steps */
+  .flow{display:flex;flex-direction:column;gap:8px;margin:10px 0;}
+  .step{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start;}
+  .step .n{width:30px;height:30px;border-radius:8px;background:var(--blue-wash);
+    color:var(--blue);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13px;}
+  .step .t{font-size:12.3px;color:var(--slate);padding-top:4px;}
+  .step .t b{color:var(--ink);}
+
+  .kv{font-size:11.5px;color:var(--slate);}
+  .pill{display:inline-block;background:var(--blue-wash);color:var(--blue-dk);
+    font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:999px;margin:0 4px 4px 0;}
+  .pill.g{background:var(--green-wash);color:#04563d;}
+
+  .refs{font-size:11px;color:var(--slate);}
+  .refs li{font-size:11px;margin-bottom:6px;}
+</style>
+
+<!-- ============ PAGE 1 · COVER ============ -->
+<div class="page cover" data-document-role="page" data-label="Cover">
+  <div style="background:linear-gradient(160deg,#0066CC 0%,#003D7A 100%);height:100%;
+       min-height:1123px;color:#fff;padding:80px 64px;display:flex;flex-direction:column;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div style="width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.14);
+           display:flex;align-items:center;justify-content:center;">
+        <svg width="34" height="34" viewBox="0 0 200 200" fill="none">
+          <path d="M100 48 v46" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+          <circle cx="100" cy="46" r="11" fill="#fff"/>
+          <path d="M70 96 C 44 104,40 140,52 158 C 62 172,82 166,84 148 L84 104 C84 98,76 94,70 96 Z" fill="#fff"/>
+          <path d="M130 96 C 156 104,160 140,148 158 C 138 172,118 166,116 148 L116 104 C116 98,124 94,130 96 Z" fill="#fff"/>
+        </svg>
+      </div>
+      <div style="font-weight:700;font-size:20px;letter-spacing:.01em;">Team GMora</div>
+    </div>
+
+    <div style="margin-top:auto;">
+      <div style="font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+           color:#9DC4F0;margin-bottom:18px;">Brainstorm 2026 · Semifinal Report</div>
+      <h1 style="font-size:52px;line-height:1.05;color:#fff;font-weight:800;letter-spacing:-.02em;">
+        PneumoScan&nbsp;AI</h1>
+      <p style="font-size:19px;color:#CFE1F7;margin-top:16px;max-width:30ch;line-height:1.4;">
+        Explainable, fail-safe pneumonia screening from chest X-rays — built,
+        validated, and deployed for Sri Lankan primary care.</p>
+
+      <div style="margin-top:26px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span style="background:rgba(255,255,255,.15);color:#fff;font-size:12px;font-weight:600;
+             padding:6px 13px;border-radius:999px;">Live at pneu.gmora.dev</span>
+        <span style="background:rgba(255,255,255,.15);color:#fff;font-size:12px;font-weight:600;
+             padding:6px 13px;border-radius:999px;">94.2% accuracy · 0.988 AUC</span>
+        <span style="background:rgba(255,255,255,.15);color:#fff;font-size:12px;font-weight:600;
+             padding:6px 13px;border-radius:999px;">Installable mobile app</span>
+      </div>
+    </div>
+
+    <div style="margin-top:56px;border-top:1px solid rgba(255,255,255,.22);padding-top:20px;
+         display:flex;justify-content:space-between;align-items:flex-end;">
+      <div style="font-size:13px;color:#CFE1F7;line-height:1.7;">
+        <div style="color:#fff;font-weight:700;margin-bottom:4px;">University of Moratuwa</div>
+        Kusal Pabasara · Pasindu Mihiranga<br>Thanoj Buddhima · Senuja Dilmith
+      </div>
+      <div style="font-size:12px;color:#9DC4F0;text-align:right;">
+        Innovative &amp; Affordable Healthcare<br>Solutions for Local Challenges</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE 2 · EXECUTIVE SUMMARY ============ -->
+<div class="page" data-document-role="page" data-label="Executive Summary">
+  <div class="rh"><span class="brand">PneumoScan AI</span><span class="tag">Executive Summary</span></div>
+
+  <div class="eyebrow">At a glance</div>
+  <h2 class="sec-title">From concept to a deployed clinical screening tool</h2>
+  <p class="lead">Since the initial round, PneumoScan AI has progressed from a
+    proof-of-concept model to a fully working, publicly deployed application —
+    with a substantially stronger, independently validated model and a complete
+    patient-and-clinician workflow.</p>
+
+  <div class="tiles">
+    <div class="tile"><div class="v">94.2%</div><div class="l">Test Accuracy</div><div class="d">▲ from 86.7%</div></div>
+    <div class="tile"><div class="v">0.988</div><div class="l">AUC-ROC</div><div class="d">▲ from 0.943</div></div>
+    <div class="tile"><div class="v">94.3%</div><div class="l">Sensitivity</div><div class="d">fail-safe tuned</div></div>
+    <div class="tile"><div class="v">23,405</div><div class="l">Training Images</div><div class="d">peds + adult</div></div>
+  </div>
+
+  <div class="body">
+    <h3 class="sub">What has been achieved</h3>
+    <ul>
+      <li><strong>A live, installable app</strong> at <a href="https://pneu.gmora.dev">pneu.gmora.dev</a> — served over HTTPS,
+        installable to a phone home screen (PWA), with in-browser camera capture and file upload.</li>
+      <li><strong>A validated, generalised model</strong> — retrained on a combined <strong>pediatric + adult</strong>
+        corpus (23,405 images) with dedicated phone-photo robustness, verified by 5-fold cross-validation.</li>
+      <li><strong>A fail-safe clinical design</strong> — a sensitivity-first decision threshold, an image-quality
+        gatekeeper, calibrated "uncertain" handling, and Grad-CAM explainability on every prediction.</li>
+      <li><strong>Two audiences, one engine</strong> — tuned plain-language guidance for patients/parents and a full
+        technical read-out for clinicians.</li>
+    </ul>
+
+    <div class="note ok"><strong>Positive result, verified:</strong> On a real phone photo of an adult pneumonia
+      X-ray from a Moratuwa clinic, the system correctly returns "Signs of pneumonia"; on a healthy adult phone
+      X-ray it returns "No clear signs" — the two cases the earlier pediatric-only model could not handle.</div>
+
+    <h3 class="sub">How this report is organised</h3>
+    <p>Section 1 frames the problem and local need. Section 2 describes the deployed solution and how it works.
+      Section 3 presents the technical implementation, model, and validated results. Section 4 reviews the
+      literature and background research. Sections 5–8 address feasibility, regulatory compliance and IP, data
+      security, and ethics. Sections 9–10 cover impact, sustainability, cost-effectiveness, and the roadmap.</p>
+  </div>
+
+  <div class="foot"><span>Team GMora · University of Moratuwa</span><span>Brainstorm 2026 · Semifinal</span></div>
+</div>
+
+<!-- ============ PAGE 3 · PROBLEM ============ -->
+<div class="page" data-document-role="page" data-label="The Problem">
+  <div class="rh"><span class="brand">PneumoScan AI</span><span class="tag">Section 1 · The Problem</span></div>
+
+  <div class="eyebrow">Section 1</div>
+  <h2 class="sec-title"><span class="sec-num">1.</span> The problem and why it matters</h2>
+  <p class="lead">Pneumonia is a leading cause of mortality worldwide, and in Sri Lanka timely diagnosis is
+    blocked by a critical shortage of radiologists — especially in rural and district facilities.</p>
+
+  <div class="body">
+    <h4 class="sub">Global &amp; local burden</h4>
+    <ul>
+      <li><strong>~450 million</strong> pneumonia cases occur globally each year (WHO).</li>
+      <li><strong>~2.5 million</strong> deaths annually — the leading infectious killer of children under five.</li>
+      <li>Pneumonia accounts for roughly <strong>15%</strong> of all deaths in children under five.</li>
+      <li>In Sri Lanka, respiratory infections are among the top causes of hospital admission; rural centres face
+        diagnostic delays of <strong>24–72 hours</strong> awaiting radiologist review.</li>
+      <li>Radiology is rarely available around the clock, leaving nights and weekends inadequately covered.</li>
+    </ul>
+
+    <h4 class="sub">Unmet clinical needs</h4>
+    <div class="two">
+      <div class="card"><h4>Radiologist shortage</h4><p>Chest X-rays go unread or delayed in rural Sri Lanka
+        where trained radiologists are scarce.</p></div>
+      <div class="card"><h4>Diagnostic variability</h4><p>Manual interpretation carries inter-observer
+        variability, particularly for subtle or early pneumonia.</p></div>
+      <div class="card"><h4>No affordable pre-screening</h4><p>No low-cost, AI-assisted triage tool is widely
+        deployed in Sri Lankan hospitals.</p></div>
+      <div class="card"><h4>24/7 unavailability</h4><p>Specialist services are rarely continuous, leaving
+        critical gaps in emergency care.</p></div>
+    </div>
+
+    <div class="note">This directly aligns with the Brainstorm 2026 theme — <strong>"Innovative and Affordable
+      Healthcare Solutions for Local Challenges."</strong> An affordable, AI-assisted screen deployed in rural
+      clinics and district hospitals can shorten dangerous diagnostic delays and prevent avoidable deaths.</div>
+
+    <h4 class="sub">How we researched the problem</h4>
+    <ul>
+      <li><strong>WHO &amp; global health data</strong> to quantify the burden of pneumonia in South Asia.</li>
+      <li><strong>Peer-reviewed clinical dataset</strong> (Kermany et al., 2018; <em>Cell</em>) validating the
+        authenticity of the pediatric training data.</li>
+      <li><strong>Expert feedback</strong> from the IEEE EMBS BioFusion Hackathon 2026, where domain experts
+        reviewed the project and guided refinement of the model and app design.</li>
+    </ul>
+  </div>
+
+  <div class="foot"><span>Team GMora · University of Moratuwa</span><span>Section 1 · The Problem</span></div>
+</div>
+
+<!-- ============ PAGE 4 · SOLUTION ============ -->
+<div class="page" data-document-role="page" data-label="The Solution">
+  <div class="rh"><span class="brand">PneumoScan AI</span><span class="tag">Section 2 · The Solution</span></div>
+
+  <div class="eyebrow">Section 2</div>
+  <h2 class="sec-title"><span class="sec-num">2.</span> The solution — a deployed screening app</h2>
+  <p class="lead">PneumoScan AI is a live web and mobile application. A health worker — or a patient — captures or
+    uploads a chest X-ray and receives an instant, explainable, fail-safe screening result.</p>
+
+  <div class="body">
+    <div class="note ok"><strong>Now live:</strong> <a href="https://pneu.gmora.dev">https://pneu.gmora.dev</a> —
+      HTTPS-secured, installable to a phone home screen, no app store required.</div>
+
+    <h3 class="sub">How the app works — end to end</h3>
+    <div class="flow">
+      <div class="step"><div class="n">1</div><div class="t"><b>Capture or upload.</b> Take a photo of the
+        X-ray with a phone camera, or upload a digital file (JPEG/PNG). A role selector tailors the experience for
+        a <b>patient/parent</b> or a <b>clinician</b>.</div></div>
+      <div class="step"><div class="n">2</div><div class="t"><b>Quality gate.</b> An automatic check rejects
+        unusable images (too small, no detail) and — for phone photos — tolerates the soft focus and warm colour
+        cast that are normal for a snapshot of a film.</div></div>
+      <div class="step"><div class="n">3</div><div class="t"><b>Phone-photo rectification.</b> For photos of
+        physical films, OpenCV detects the film boundary and corrects the camera-angle perspective.</div></div>
+      <div class="step"><div class="n">4</div><div class="t"><b>AI screening.</b> A fine-tuned ResNet-50 outputs a
+        calibrated pneumonia probability; a fail-safe decision threshold converts it into a triage band.</div></div>
+      <div class="step"><div class="n">5</div><div class="t"><b>Explainable result.</b> A Grad-CAM heatmap shows
+        which lung regions drove the prediction, alongside plain-language guidance and an explicit "screening aid,
+        not a diagnosis" disclaimer.</div></div>
+    </div>
+
+    <h3 class="sub">Result communication — safe by design</h3>
+    <table>
+      <tr><th>Band</th><th>Meaning</th><th>Guidance shown</th></tr>
+      <tr><td><strong>No clear signs</strong></td><td>Low pneumonia probability</td><td>Reassurance + "see a doctor if symptoms persist"</td></tr>
+      <tr><td><strong>Uncertain</strong></td><td>Borderline / on the fence</td><td>"Get a second opinion" — never a confident call</td></tr>
+      <tr><td><strong>Signs of pneumonia</strong></td><td>Above fail-safe threshold</td><td>Prompt to seek clinical care promptly</td></tr>
+    </table>
+
+    <div class="two" style="margin-top:6px;">
+      <div class="card"><h4>For patients &amp; parents</h4><p>Plain-language result, clear next-step guidance,
+        and a strong prompt to consult a clinician. No jargon.</p></div>
+      <div class="card"><h4>For clinicians</h4><p>Grad-CAM overlay, class probabilities, the fail-safe operating
+        point, and full technical detail for decision support.</p></div>
+    </div>
+  </div>
+
+  <div class="foot"><span>Team GMora · University of Moratuwa</span><span>Section 2 · The Solution</span></div>
+</div>
+
+<!-- ============ PAGE 5 · TECHNICAL IMPLEMENTATION ============ -->
+<div class="page" data-document-role="page" data-label="Technical Implementation">
+  <div class="rh"><span class="brand">PneumoScan AI</span><span class="tag">Section 3 · Technical Implementation</span></div>
+
+  <div class="eyebrow">Section 3</div>
+  <h2 class="sec-title"><span class="sec-num">3.</span> Technical implementation &amp; results</h2>
+  <p class="lead">The model was substantially strengthened: broader training data, deeper fine-tuning, phone-photo
+    robustness, and a fail-safe operating point — all validated on held-out data.</p>
+
+  <div class="body">
+    <h3 class="sub">Model &amp; training strategy</h3>
+    <ul>
+      <li><strong>Backbone:</strong> ResNet-50 (ImageNet-pretrained). We now fine-tune the deepest residual stage
+        (<code>layer4</code>) plus the classifier head — ~15M trainable parameters — rather than the head alone,
+        letting high-level features adapt from natural images to radiographs.</li>
+      <li><strong>Combined corpus:</strong> pediatric (Kermany/Guangzhou, 5,856) <strong>+</strong> adult
+        (COVID-19 Radiography Database, 17,549) = <strong>23,405 images</strong>, near class-balanced (≈50/50).</li>
+      <li><strong>Phone-photo augmentation:</strong> training images are synthetically transformed to mimic phone
+        snapshots of films — perspective, warm colour cast, glare, vignette, blur, JPEG — so the model reads real
+        phone captures, not just clean digital scans.</li>
+      <li><strong>Regularisation:</strong> AdamW with weight decay, label smoothing, cosine LR schedule, early
+        stopping — the train/validation gap stays ≈1%.</li>
+      <li><strong>Fail-safe threshold:</strong> the decision threshold is tuned on a validation set for ≥95%
+        sensitivity and capped so the tool errs toward flagging — a missed pneumonia is the costly error.</li>
+    </ul>
+
+    <h3 class="sub">Held-out test performance (3,510 images)</h3>
+    <div class="tiles">
+      <div class="tile"><div class="v">94.2%</div><div class="l">Accuracy</div></div>
+      <div class="tile"><div class="v">94.3%</div><div class="l">Sensitivity</div></div>
+      <div class="tile"><div class="v">94.2%</div><div class="l">Specificity</div></div>
+      <div class="tile"><div class="v">0.988</div><div class="l">AUC-ROC</div></div>
+    </div>
+
+    <table>
+      <tr><th>Metric</th><th>Old (pediatric-only)</th><th>Now (combined + phone-trained)</th></tr>
+      <tr><td><strong>Test accuracy</strong></td><td>86.7%</td><td><strong>94.2%</strong></td></tr>
+      <tr><td><strong>AUC-ROC</strong></td><td>0.943</td><td><strong>0.988</strong></td></tr>
+      <tr><td><strong>Sensitivity / Precision / F1</strong></td><td>96.7% / 84.3% / 0.90</td><td><strong>94.3% / 94.1% / 0.94</strong></td></tr>
+      <tr><td><strong>Works on adult X-rays</strong></td><td>No (fails)</td><td><strong>Yes — 92.4% recall, AUC 0.984</strong></td></tr>
+      <tr><td><strong>Works on phone photos</strong></td><td>No</td><td><strong>Yes — verified on real captures</strong></td></tr>
+      <tr><td><strong>Overfitting (dev→test gap)</strong></td><td>7.7%</td><td><strong>1.1%</strong></td></tr>
+    </table>
+
+    <div class="note"><strong>Validation depth.</strong> Beyond a single split, we ran <strong>5-fold stratified
+      cross-validation</strong> (sensitivity 98.7% ± 0.5% across folds) and report <strong>per-population</strong>
+      results — pediatric (97.6% recall, AUC 0.995) and adult (92.4% recall, AUC 0.984) — demonstrating the model
+      generalises across ages rather than overfitting one population.</div>
+  </div>
+
+  <div class="foot"><span>Team GMora · University of Moratuwa</span><span>Section 3 · Technical Implementation</span></div>
+</div>
+
+<!-- ============ PAGE 6 · ARCHITECTURE & DEPLOYMENT ============ -->
+<div class="page" data-document-role="page" data-label="Architecture & Deployment">
+  <div class="rh"><span class="brand">PneumoScan AI</span><span class="tag">Section 3 · Architecture</span></div>
+
+  <div class="eyebrow">Section 3 (cont.)</div>
+  <h2 class="sec-title">System architecture &amp; live deployment</h2>
+  <p class="lead">A single trained model serves both audiences through a lightweight, low-cost, fully deployed
+    web stack — evidence of functionality, not just simulation.</p>
+
+  <div class="body">
+    <h3 class="sub">Inference pipeline</h3>
+    <div style="background:#F7FAFD;border:1px solid var(--hair);border-radius:12px;padding:16px 18px;
+         font-size:11.8px;color:var(--slate);line-height:2;">
+      <strong>Capture / Upload</strong> &nbsp;→&nbsp; <strong>Quality gate</strong> (OpenCV) &nbsp;→&nbsp;
+      <strong>Phone-photo rectification</strong> (perspective correction) &nbsp;→&nbsp;
+      <strong>Preprocess</strong> (224×224, RGB, ImageNet norm) &nbsp;→&nbsp;
+      <strong>ResNet-50</strong> (fine-tuned) &nbsp;→&nbsp; <strong>Softmax</strong> P(Normal)/P(Pneumonia)
+      &nbsp;→&nbsp; <strong>Fail-safe triage band</strong> &nbsp;→&nbsp;
+      <strong>Grad-CAM heatmap</strong> &nbsp;→&nbsp; <strong>Role-aware result</strong>
+    </div>
+
+    <h3 class="sub">Deployment stack (all live)</h3>
+    <table>
+      <tr><th>Layer</th><th>Technology</th><th>Role</th></tr>
+      <tr><td><strong>Model</strong></td><td>PyTorch 2.6, torchvision ResNet-50</td><td>Trained on an NVIDIA RTX 3050 GPU; runs CPU-only inference in production.</td></tr>
+      <tr><td><strong>Vision utils</strong></td><td>OpenCV, NumPy, Pillow</td><td>Quality checks, phone-photo rectification, Grad-CAM overlay.</td></tr>
+      <tr><td><strong>App / UI</strong></td><td>Streamlit + custom CSS/PWA</td><td>Patient/clinician UI, camera capture, installable home-screen app.</td></tr>
+      <tr><td><strong>Server</strong></td><td>AWS EC2 (Ubuntu), nginx, systemd</td><td>Reverse proxy, process supervision, always-on service.</td></tr>
+      <tr><td><strong>Security</strong></td><td>Let's Encrypt TLS (HTTPS)</td><td>Encrypted transport; required for browser camera access.</td></tr>
+    </table>
+
+    <h3 class="sub">Delivered application features</h3>
+    <div>
+      <span class="pill g">Live at pneu.gmora.dev</span><span class="pill g">Installable PWA</span>
+      <span class="pill g">In-browser camera capture</span><span class="pill">Phone-photo rectification</span>
+      <span class="pill">Image-quality gate</span><span class="pill">Fail-safe threshold</span>
+      <span class="pill">Calibrated "uncertain" band</span><span class="pill">Grad-CAM explainability</span>
+      <span class="pill">Patient / Clinician roles</span><span class="pill">Clinical escalation guidance</span>
+      <span class="pill">Offline app shell</span><span class="pill">Model insights dashboard</span>
+    </div>
+
+    <div class="note ok"><strong>Feasibility demonstrated.</strong> The entire system runs on free/low-cost
+      infrastructure: open-source frameworks, a single small cloud VM for CPU inference, and no per-query licensing.
+      An optional edge deployment (Raspberry Pi / Jetson Nano) enables fully offline use in clinics without internet.</div>
+  </div>
+
+  <div class="foot"><span>Team GMora · University of Moratuwa</span><span>Section 3 · Architecture &amp; Deployment</span></div>
+</div>
+
+<!-- ============ PAGE 7 · LITERATURE REVIEW & FEASIBILITY ============ -->
+<div class="page" data-document-role="page" data-label="Literature & Feasibility">
+  <div class="rh"><span class="brand">PneumoScan AI</span><span class="tag">Sections 4–5 · Background &amp; Feasibility</span></div>
+
+  <div class="eyebrow">Section 4</div>
+  <h2 class="sec-title"><span class="sec-num">4.</span> Literature review &amp; background</h2>
+  <div class="body">
+    <table>
+      <tr><th>Work</th><th>Contribution</th><th>Our advance</th></tr>
+      <tr><td><strong>Rajpurkar et al. (2017) — CheXNet</strong></td><td>121-layer DenseNet, radiologist-level pneumonia detection.</td><td>We add explainability + a deployed, fail-safe workflow for low-resource use.</td></tr>
+      <tr><td><strong>Kermany et al. (2018)</strong></td><td>Transfer learning on pediatric CXR; expert-graded dataset.</td><td>We generalise beyond pediatrics to adults and phone photos.</td></tr>
+      <tr><td><strong>Selvaraju et al. (2017) — Grad-CAM</strong></td><td>Gradient-based visual explanation for CNNs.</td><td>Integrated into every prediction to build clinical trust.</td></tr>
+      <tr><td><strong>He et al. (2016) — ResNet</strong></td><td>Residual learning enabling deep networks.</td><td>Our fine-tuned backbone, adapted to CXR features.</td></tr>
+      <tr><td><strong>Phillips et al. — CheXphoto</strong></td><td>Photographed-CXR robustness benchmark.</td><td>We reproduce capture artefacts synthetically to train for phone use.</td></tr>
+    </table>
+    <p><strong>Gap addressed:</strong> most published models are accurate on clean, in-distribution scans but are
+      not deployment-ready, not explainable, and not validated on the messy inputs (adult anatomy, phone photos)
+      that a real rural workflow produces. PneumoScan AI targets exactly that gap.</p>
+  </div>
+
+  <div class="eyebrow" style="margin-top:14px;">Section 5</div>
+  <h2 class="sec-title"><span class="sec-num">5.</span> Feasibility</h2>
+  <div class="body">
+    <div class="two">
+      <div class="card"><h4>Technical feasibility</h4><p>Built entirely on mature, open-source frameworks
+        (PyTorch, OpenCV, Streamlit). The trained model is ~90 MB and runs in well under a second on CPU — no GPU
+        needed in production.</p></div>
+      <div class="card"><h4>Operational feasibility</h4><p>Deployed on a single low-cost cloud VM with automated
+        TLS and process supervision; an edge option removes the internet dependency for remote clinics.</p></div>
+      <div class="card"><h4>Data feasibility</h4><p>Trained on 23,405 openly licensed, peer-reviewed images; the
+        pipeline can ingest new regional data as partner hospitals contribute.</p></div>
+      <div class="card"><h4>Economic feasibility</h4><p>Zero per-query licensing; runs on free-tier / low-cost
+        infrastructure, making per-scan cost negligible versus enterprise tools.</p></div>
+    </div>
+  </div>
+
+  <div class="foot"><span>Team GMora · University of Moratuwa</span><span>Sections 4–5 · Background &amp; Feasibility</span></div>
+</div>
+
+<!-- ============ PAGE 8 · REGULATORY / IP + DATA SECURITY ============ -->
+<div class="page" data-document-role="page" data-label="Regulatory, IP & Security">
+  <div class="rh"><span class="brand">PneumoScan AI</span><span class="tag">Sections 6–7 · Regulatory &amp; Security</span></div>
+
+  <div class="eyebrow">Section 6</div>
+  <h2 class="sec-title"><span class="sec-num">6.</span> Regulatory aspects &amp; intellectual property</h2>
+  <div class="body">
+    <p>As a healthcare tool, PneumoScan AI is positioned as <strong>Software as a Medical Device (SaMD)</strong> and
+      framed explicitly as a <strong>screening decision-support aid, not a diagnostic device</strong> — keeping a
+      clinician in the loop and lowering the regulatory risk class.</p>
+    <table>
+      <tr><th>Jurisdiction / framework</th><th>Applicability &amp; our plan</th></tr>
+      <tr><td><strong>NMRA (Sri Lanka)</strong></td><td>Primary regulator. We target registration as a low–moderate
+        risk SaMD, with a documented clinical-validation study on local X-rays before any clinical deployment.</td></tr>
+      <tr><td><strong>US FDA</strong></td><td>Reference framework: an equivalent product would pursue a 510(k)
+        pathway as Class II. We follow FDA "Good Machine Learning Practice" and SaMD guidance for design controls.</td></tr>
+      <tr><td><strong>Standards</strong></td><td>Aligning with IEC 62304 (medical device software lifecycle) and
+        ISO 14971 (risk management) as the engineering discipline for a future submission.</td></tr>
+    </table>
+    <h4 class="sub">Intellectual property</h4>
+    <ul>
+      <li>The <strong>trained model, phone-photo augmentation pipeline, fail-safe threshold logic, and the
+        patient/clinician application</strong> are our original contributions.</li>
+      <li>All third-party components (ResNet-50 weights, datasets, libraries) are used under permissive open-source
+        / open-access licences, documented for compliance.</li>
+      <li>Strategy: retain proprietary rights over the application and locally-trained weights while keeping the
+        core screening accessible to public hospitals (see sustainability model).</li>
+    </ul>
+  </div>
+
+  <div class="eyebrow" style="margin-top:12px;">Section 7</div>
+  <h2 class="sec-title"><span class="sec-num">7.</span> Data security &amp; privacy policy</h2>
+  <div class="body">
+    <div class="two">
+      <div class="card"><h4>In transit</h4><p>All traffic is encrypted over HTTPS (TLS). Camera access is only
+        granted on a secure origin.</p></div>
+      <div class="card"><h4>Data minimisation</h4><p>The current tool performs inference and returns a result
+        without persisting patient images by default — nothing is stored unless explicitly enabled with consent.</p></div>
+      <div class="card"><h4>Consent &amp; retention</h4><p>Planned account tier gates any storage behind explicit
+        consent, with retention limits and one-tap deletion.</p></div>
+      <div class="card"><h4>Governance</h4><p>An audit trail of predictions (not identities) supports quality
+        monitoring and model-drift detection without exposing personal data.</p></div>
+    </div>
+    <div class="note warn"><strong>Responsible-AI stance:</strong> every result is labelled a screening aid
+      requiring clinician confirmation; the tool is scoped and its known limitations (see ethics) are stated in-app.</div>
+  </div>
+
+  <div class="foot"><span>Team GMora · University of Moratuwa</span><span>Sections 6–7 · Regulatory &amp; Security</span></div>
+</div>
+
+<!-- ============ PAGE 9 · ETHICS + IMPACT ============ -->
+<div class="page" data-document-role="page" data-label="Ethics & Impact">
+  <div class="rh"><span class="brand">PneumoScan AI</span><span class="tag">Sections 8–9 · Ethics &amp; Impact</span></div>
+
+  <div class="eyebrow">Section 8</div>
+  <h2 class="sec-title"><span class="sec-num">8.</span> Ethical review</h2>
+  <div class="body">
+    <ul>
+      <li><strong>Safety-first framing.</strong> A fail-safe threshold minimises missed pneumonia; a false positive
+        (healthy patient referred for review) is the safe direction and is handled by the "confirm with a doctor" flow.</li>
+      <li><strong>Honesty about limits.</strong> The model is strongest on clear digital X-rays; performance on
+        phone photos of adult films is stated openly, and borderline cases are shown as "uncertain" rather than a
+        confident call.</li>
+      <li><strong>Bias &amp; fairness.</strong> Training now spans pediatric and adult populations; per-population
+        metrics are reported. Continued external validation on Sri Lankan data is part of the roadmap.</li>
+      <li><strong>Human-in-the-loop.</strong> The system never replaces a clinician — it triages and explains,
+        leaving the diagnosis to a qualified professional.</li>
+      <li><strong>Accessibility.</strong> Bilingual (Sinhala/English) interfaces are planned so the tool serves the
+        communities that need it most.</li>
+    </ul>
+  </div>
+
+  <div class="eyebrow" style="margin-top:12px;">Section 9</div>
+  <h2 class="sec-title"><span class="sec-num">9.</span> Impact on the healthcare sector</h2>
+  <div class="body">
+    <p>PneumoScan AI turns a 24–72 hour diagnostic delay into a sub-30-second, always-available assessment,
+      directly addressing radiologist shortage, delay, and the absence of automated pre-screening.</p>
+    <table>
+      <tr><th>Stakeholder</th><th>Benefit</th></tr>
+      <tr><td><strong>Rural health workers</strong></td><td>Rapid AI-assisted pre-screening on a basic smartphone — faster decisions without specialist access.</td></tr>
+      <tr><td><strong>Patients</strong></td><td>Shorter waits, fewer missed cases, earlier treatment — improved outcomes.</td></tr>
+      <tr><td><strong>District hospitals</strong></td><td>A 24/7 second opinion that helps prioritise urgent cases and reduce radiologist load.</td></tr>
+      <tr><td><strong>Ministry of Health</strong></td><td>Scalable, low-cost deployment and a basis for national pneumonia-trend tracking.</td></tr>
+    </table>
+  </div>
+
+  <div class="foot"><span>Team GMora · University of Moratuwa</span><span>Sections 8–9 · Ethics &amp; Impact</span></div>
+</div>
+
+<!-- ============ PAGE 10 · SUSTAINABILITY, ROADMAP, REFERENCES ============ -->
+<div class="page" data-document-role="page" data-label="Sustainability & Roadmap">
+  <div class="rh"><span class="brand">PneumoScan AI</span><span class="tag">Section 10 · Sustainability &amp; Roadmap</span></div>
+
+  <div class="eyebrow">Section 10</div>
+  <h2 class="sec-title"><span class="sec-num">10.</span> Sustainability, cost &amp; roadmap</h2>
+  <div class="body">
+    <div class="two">
+      <div class="card"><h4>Cost-effectiveness</h4><p>Open-source stack, CPU-only inference on a single low-cost
+        VM, and zero per-query licensing make per-scan cost negligible — versus enterprise tools (Qure.ai, Lunit,
+        Aidoc) priced out of reach for rural clinics.</p></div>
+      <div class="card"><h4>Sustainability model</h4><p>Freemium access for NGOs and government hospitals; an
+        optional subscription tier for private hospitals funds maintenance. The model improves as partner hospitals
+        contribute regional data.</p></div>
+    </div>
+
+    <h3 class="sub">Roadmap</h3>
+    <table>
+      <tr><th>Phase</th><th>Milestone</th></tr>
+      <tr><td><strong>1 · Done</strong></td><td>Deployed binary screening with Grad-CAM, fail-safe threshold, adult + pediatric + phone-photo robustness.</td></tr>
+      <tr><td><strong>2</strong></td><td>Bacterial vs. viral pneumonia classification for targeted treatment guidance.</td></tr>
+      <tr><td><strong>3</strong></td><td>Additional local pathologies (tuberculosis, pleural effusion).</td></tr>
+      <tr><td><strong>4</strong></td><td>SaMD registration with NMRA Sri Lanka + local clinical-validation study.</td></tr>
+      <tr><td><strong>5</strong></td><td>Bilingual UI and integration with national health IT (eSuwa).</td></tr>
+    </table>
+
+    <div class="note ok"><strong>Social impact.</strong> By making pneumonia screening fast, explainable, and
+      affordable across rural Sri Lanka, PneumoScan AI can help prevent avoidable deaths — bringing specialist-level
+      decision support to the settings that need it most.</div>
+
+    <h3 class="sub">Key references</h3>
+    <ol class="refs">
+      <li>Rajpurkar P. et al. (2017). CheXNet: Radiologist-Level Pneumonia Detection on Chest X-Rays. arXiv:1711.05225.</li>
+      <li>Kermany D. et al. (2018). Identifying Medical Diagnoses by Image-Based Deep Learning. <em>Cell</em> 172(5).</li>
+      <li>He K. et al. (2016). Deep Residual Learning for Image Recognition. CVPR.</li>
+      <li>Selvaraju R. et al. (2017). Grad-CAM: Visual Explanations from Deep Networks. ICCV.</li>
+      <li>Rahman T. et al. (2021). COVID-19 Radiography Database. Kaggle / <em>Computers in Biology and Medicine</em>.</li>
+      <li>World Health Organization — Pneumonia fact sheets and global health statistics.</li>
+    </ol>
+  </div>
+
+  <div class="foot"><span>Team GMora · University of Moratuwa</span><span>Brainstorm 2026 · Semifinal Report</span></div>
+</div>
