@@ -1,0 +1,176 @@
+{
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.33140234905295074,
+      "train_acc": 0.8900146484375,
+      "val_loss": 0.26651793631732973,
+      "val_acc": 0.9327635327635327
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.2751004367310088,
+      "train_acc": 0.9244384765625,
+      "val_loss": 0.23768216181344795,
+      "val_acc": 0.9396011396011396
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.25343196172616445,
+      "train_acc": 0.93426513671875,
+      "val_loss": 0.23331323335653018,
+      "val_acc": 0.945014245014245
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.24499965339782648,
+      "train_acc": 0.93658447265625,
+      "val_loss": 0.2373116008916132,
+      "val_acc": 0.9435897435897436
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.23170700241462328,
+      "train_acc": 0.94610595703125,
+      "val_loss": 0.22684910946082526,
+      "val_acc": 0.9492877492877493
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.22682450799038634,
+      "train_acc": 0.94775390625,
+      "val_loss": 0.21585609929853694,
+      "val_acc": 0.9532763532763533
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.22410851075255778,
+      "train_acc": 0.950439453125,
+      "val_loss": 0.2147449436690393,
+      "val_acc": 0.9515669515669516
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.2191139415372163,
+      "train_acc": 0.9510498046875,
+      "val_loss": 0.2159753582076809,
+      "val_acc": 0.9552706552706552
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.21281941144843586,
+      "train_acc": 0.9544677734375,
+      "val_loss": 0.2142750936865467,
+      "val_acc": 0.9552706552706552
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.21300573504413478,
+      "train_acc": 0.9544677734375,
+      "val_loss": 0.21265659783980106,
+      "val_acc": 0.9552706552706552
+    }
+  ],
+  "test_report": {
+    "NORMAL": {
+      "precision": 0.9435665914221218,
+      "recall": 0.9467723669309174,
+      "f1-score": 0.9451667608818541,
+      "support": 1766.0
+    },
+    "PNEUMONIA": {
+      "precision": 0.9459148446490219,
+      "recall": 0.9426605504587156,
+      "f1-score": 0.9442848937392303,
+      "support": 1744.0
+    },
+    "accuracy": 0.9447293447293448,
+    "macro avg": {
+      "precision": 0.9447407180355718,
+      "recall": 0.9447164586948165,
+      "f1-score": 0.9447258273105422,
+      "support": 3510.0
+    },
+    "weighted avg": {
+      "precision": 0.9447333588374248,
+      "recall": 0.9447293447293448,
+      "f1-score": 0.9447285909967442,
+      "support": 3510.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      1672,
+      94
+    ],
+    [
+      100,
+      1644
+    ]
+  ],
+  "auc_roc": 0.9878231594231509,
+  "operating_point": {
+    "policy": "fail-safe: dev-tuned for Pneumonia recall >= 0.95, capped at 0.5",
+    "threshold": 0.1650540828704834,
+    "min_recall_target": 0.95
+  },
+  "test_report_default": {
+    "NORMAL": {
+      "precision": 0.9249865083648138,
+      "recall": 0.970554926387316,
+      "f1-score": 0.9472229897761812,
+      "support": 1766.0
+    },
+    "PNEUMONIA": {
+      "precision": 0.9686179843089922,
+      "recall": 0.9202981651376146,
+      "f1-score": 0.9438400470449868,
+      "support": 1744.0
+    },
+    "accuracy": 0.9455840455840456,
+    "macro avg": {
+      "precision": 0.946802246336903,
+      "recall": 0.9454265457624653,
+      "f1-score": 0.945531518410584,
+      "support": 3510.0
+    },
+    "weighted avg": {
+      "precision": 0.9466655095177047,
+      "recall": 0.9455840455840456,
+      "f1-score": 0.9455421202254111,
+      "support": 3510.0
+    }
+  },
+  "confusion_matrix_default": [
+    [
+      1714,
+      52
+    ],
+    [
+      139,
+      1605
+    ]
+  ],
+  "overfitting": {
+    "dev_accuracy": 0.9541310541310541,
+    "test_accuracy": 0.9447293447293448,
+    "gap": 0.009401709401709368
+  },
+  "config": {
+    "epochs": 10,
+    "batch_size": 32,
+    "head_lr": 0.001,
+    "backbone_lr": 0.0001,
+    "patience": 4,
+    "label_smoothing": 0.05,
+    "min_recall": 0.97,
+    "tta": true,
+    "full_finetune": false,
+    "kfolds": 1,
+    "combined_adult": true,
+    "num_workers": 4,
+    "output": "pneumonia_resnet50_combined.pth",
+    "metrics_out": "training_metrics_combined.json"
+  },
+  "seed": 42
+}
