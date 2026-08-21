@@ -13,7 +13,7 @@
                                 style="stroke-dasharray: 263.89; stroke-dashoffset: {{ 263.89 - (263.89 * result.confidence) }};"></circle>
                     </svg>
                     <div class="gauge-inner">
-                        <div class="gauge-value">{{ "%.0f"|format(result.confidence * 100) }}<span>%</span></div>
+                        <div class="gauge-value">{{ "%.2f"|format(result.confidence * 100) }}<span>%</span></div>
                     </div>
                 </div>
                 <div class="gauge-label-box">
