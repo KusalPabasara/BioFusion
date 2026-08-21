@@ -36,7 +36,7 @@ class CameraController:
         with self._lock:
             if self.cap and self.cap.isOpened():
                 return True
-            self.cap = cv2.VideoCapture(self.camera_index)
+            self.cap = cv2.VideoCapture(self.camera_index, cv2.CAP_DSHOW)
             if not self.cap.isOpened():
                 logger.error(f"Failed to open camera at index {self.camera_index}")
                 self.cap = None

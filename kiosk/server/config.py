@@ -11,7 +11,7 @@ BAUD_RATE = int(os.environ.get("KIOSK_BAUD_RATE", "115200"))
 SERIAL_TIMEOUT = 2  # seconds
 
 # ─── Camera ──────────────────────────────────────────────────────────────────
-CAMERA_INDEX = int(os.environ.get("KIOSK_CAMERA_INDEX", "0"))
+CAMERA_INDEX = int(os.environ.get("KIOSK_CAMERA_INDEX", "2"))
 CAPTURE_WIDTH = 1920
 CAPTURE_HEIGHT = 1080
 PREVIEW_WIDTH = 640
