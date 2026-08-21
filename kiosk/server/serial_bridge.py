@@ -73,11 +73,11 @@ class SerialBridge:
             desc = (p.description or "").lower()
             mfr = (p.manufacturer or "").lower()
             # Common ESP32 identifiers
-            if any(kw in desc for kw in ["cp210", "ch340", "ch9102", "usb serial", "uart"]):
-                logger.info(f"Auto-detected possible ESP32: {p.device} ({p.description})")
+            if any(kw in desc for kw in ["cp210", "ch340", "ch9102", "usb serial", "uart", "arduino", "mega"]):
+                logger.info(f"Auto-detected possible Arduino/ESP32: {p.device} ({p.description})")
                 return p.device
-            if any(kw in mfr for kw in ["silicon labs", "wch", "espressif"]):
-                logger.info(f"Auto-detected possible ESP32: {p.device} ({p.manufacturer})")
+            if any(kw in mfr for kw in ["silicon labs", "wch", "espressif", "arduino"]):
+                logger.info(f"Auto-detected possible Arduino/ESP32: {p.device} ({p.manufacturer})")
                 return p.device
         return None
 
