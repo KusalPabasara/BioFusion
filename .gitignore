@@ -91,3 +91,8 @@ htmlcov/
 # SSH / server keys (NEVER commit)
 *.pem
 kusal.pem
+
+# Kiosk Generated Data
+kiosk/reports/
+kiosk/captures/
+kiosk/overlays/
