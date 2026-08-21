@@ -75,8 +75,11 @@ class CameraController:
                 time.sleep(0.1)
                 continue
 
-            # Resize for preview
-            frame = cv2.resize(frame, (self.preview_width, self.preview_height))
+            # Rotate for portrait mode
+            frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+
+            # Resize for preview (swap width and height for portrait)
+            frame = cv2.resize(frame, (self.preview_height, self.preview_width))
 
             # Encode as JPEG
             _, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 70])
@@ -124,6 +127,9 @@ class CameraController:
         if not ret:
             logger.error("Failed to capture frame")
             return None, None
+
+        # Rotate for portrait mode
+        frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
 
         # Save to captures directory
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

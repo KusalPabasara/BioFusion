@@ -357,9 +357,9 @@ body {
 
 .preview-frame {
     position: relative;
-    width: 640px;
+    width: 480px;
     max-width: 100%;
-    aspect-ratio: 4/3;
+    aspect-ratio: 3/4;
     background: var(--gray);
     border-radius: var(--radius-lg);
     overflow: hidden;
