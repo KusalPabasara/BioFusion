@@ -1,0 +1,31 @@
+<!-- Preview State: Live camera feed with capture button -->
+<div class="kiosk-state state-preview" id="state-preview">
+    <div class="preview-container">
+        <h2 class="state-title">
+            <span class="recording-dot"></span>
+            Live camera preview
+        </h2>
+        <p class="state-description">Adjust the X-ray position and press Capture when ready</p>
+
+        <div class="preview-frame">
+            <img src="/api/preview" alt="Live camera preview" class="preview-image" id="camera-preview">
+            <div class="preview-crosshair"></div>
+        </div>
+
+        <div class="preview-actions">
+            <button class="btn btn-capture"
+                    hx-post="/api/capture"
+                    hx-target="#kiosk-content"
+                    hx-swap="innerHTML"
+                    hx-indicator="#loading-indicator">
+                Capture →
+            </button>
+            <button class="btn btn-cancel"
+                    hx-post="/api/cancel"
+                    hx-target="#kiosk-content"
+                    hx-swap="innerHTML">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>

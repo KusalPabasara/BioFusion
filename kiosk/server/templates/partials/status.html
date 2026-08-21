@@ -1,0 +1,48 @@
+<!-- Status partial — errors, idle reset -->
+<div class="kiosk-state state-status" id="state-status">
+    <div class="idle-container">
+        {% if status == 'error' %}
+            <div class="status-icon status-error-icon">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+            </div>
+            <h2 class="idle-title" style="font-size:1.6rem;">Something went wrong</h2>
+            <p class="idle-description">{{ message }}</p>
+            <button class="btn btn-scan"
+                    hx-post="/api/reset"
+                    hx-target="#kiosk-content"
+                    hx-swap="innerHTML">
+                Try again →
+            </button>
+        {% elif status == 'idle' %}
+            <div class="hero-icon">
+                <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Lungs">
+                    <rect x="6" y="6" width="188" height="188" rx="44" fill="#EAF2FC"/>
+                    <path d="M100 48 v46" stroke="#0066CC" stroke-width="7" stroke-linecap="round"/>
+                    <circle cx="100" cy="46" r="9" fill="#0066CC"/>
+                    <path d="M100 84 C 86 96, 74 96, 66 106" stroke="#0066CC" stroke-width="6" stroke-linecap="round"/>
+                    <path d="M100 84 C 114 96, 126 96, 134 106" stroke="#0066CC" stroke-width="6" stroke-linecap="round"/>
+                    <path d="M70 96 C 44 104, 40 140, 52 158 C 62 172, 82 166, 84 148 L 84 104 C 84 98, 76 94, 70 96 Z" fill="#0066CC"/>
+                    <path d="M130 96 C 156 104, 160 140, 148 158 C 138 172, 118 166, 116 148 L 116 104 C 116 98, 124 94, 130 96 Z" fill="#0066CC"/>
+                </svg>
+            </div>
+            <span class="idle-badge">Kiosk screening mode</span>
+            <h2 class="idle-title">Screen a chest X-ray<br>for pneumonia in seconds.</h2>
+            <p class="idle-description">
+                Position the X-ray under the camera and press Start.
+                The AI model highlights signs of pneumonia and generates
+                a report you can download instantly.
+            </p>
+            <button class="btn btn-scan"
+                    hx-post="/api/scan"
+                    hx-target="#kiosk-content"
+                    hx-swap="innerHTML"
+                    hx-indicator="#loading-indicator">
+                Start screening →
+            </button>
+        {% endif %}
+    </div>
+</div>
