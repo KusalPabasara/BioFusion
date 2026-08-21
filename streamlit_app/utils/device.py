@@ -5,7 +5,7 @@ def is_mobile():
     """Detect if the current device is mobile based on screen width."""
     if 'is_mobile' not in st.session_state:
         # Evaluate window width using javascript
-        window_width = st_javascript("window.innerWidth")
+        window_width = st_javascript("window.innerWidth", key="device_width_js")
         
         # st_javascript returns 0 on first render before JS executes.
         # We assume desktop on first render, then update when width is captured.
