@@ -429,95 +429,141 @@ body {
     height: 100%;
 }
 
-/* Result card — aqryl bf-result style */
-.result-badge {
+/* ─── Result Gauge ───────────────────────────────────────────────────────── */
+.result-gauge-wrapper {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 14px;
-    padding: 24px 32px;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--hair);
-    box-shadow: var(--shadow-md);
+    gap: 24px;
     animation: bf-rise 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     width: 100%;
-    max-width: 480px;
 }
 
-.result-normal {
+.gauge-container {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: var(--white);
+    box-shadow: 
+        -4px -4px 10px rgba(255, 255, 255, 0.8),
+        4px 4px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gauge-container svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+    overflow: visible;
+}
+
+.gauge-track-bg {
+    fill: none;
+    stroke: var(--gray);
+    stroke-width: 8;
+}
+
+.gauge-track-fill {
+    fill: none;
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.result-normal .gauge-track-fill {
+    stroke: var(--success);
+    filter: drop-shadow(0 0 6px var(--success-wash));
+}
+
+.result-pneumonia .gauge-track-fill {
+    stroke: var(--attention);
+    filter: drop-shadow(0 0 6px var(--attention-wash));
+}
+
+.gauge-inner {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: var(--white);
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.1),
+        inset 0 2px 4px rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.gauge-value {
+    font-family: var(--font-head);
+    font-size: 48px;
+    font-weight: 600;
+    color: var(--black);
+    display: flex;
+    align-items: baseline;
+    letter-spacing: -1px;
+}
+
+.gauge-value span {
+    font-size: 24px;
+    color: var(--ink-60);
+    margin-left: 4px;
+    font-weight: 500;
+}
+
+.gauge-label-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--white);
+    padding: 12px 24px;
+    border-radius: 30px;
+    border: 1px solid var(--hair);
+    box-shadow: var(--shadow-md);
+}
+
+.result-normal .gauge-label-box {
+    color: var(--success);
     background: var(--success-wash);
     border-color: rgba(5, 150, 105, 0.2);
 }
 
-.result-pneumonia {
+.result-pneumonia .gauge-label-box {
+    color: var(--attention);
     background: var(--attention-wash);
     border-color: rgba(245, 158, 11, 0.2);
 }
 
-.result-icon {
+.gauge-label-box .result-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    font-size: 20px;
-    line-height: 1;
-    flex-shrink: 0;
-}
-
-.result-normal .result-icon {
-    background: var(--success);
-    color: var(--white);
-}
-
-.result-pneumonia .result-icon {
-    background: var(--attention);
-    color: var(--white);
-}
-
-.result-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.result-label {
-    font-family: var(--font-head);
     font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 0;
-    text-transform: none;
+    color: var(--white);
 }
 
-.result-normal .result-label {
-    color: var(--success);
+.result-normal .gauge-label-box .result-icon {
+    background: var(--success);
 }
 
-.result-pneumonia .result-label {
-    color: var(--attention);
+.result-pneumonia .gauge-label-box .result-icon {
+    background: var(--attention);
 }
 
-.result-big {
+.gauge-label-box .result-label {
     font-family: var(--font-head);
-    font-size: 36px;
-    font-weight: 400;
-    line-height: 40px;
-}
-
-.result-normal .result-big {
-    color: var(--success);
-}
-
-.result-pneumonia .result-big {
-    color: var(--attention);
-}
-
-.result-confidence {
-    font-size: 12px;
-    color: var(--ink-60);
-    font-weight: 500;
-    letter-spacing: 0;
-    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 /* Images grid */
@@ -553,60 +599,7 @@ body {
     font-weight: 500;
 }
 
-/* Probabilities — aqryl meter style */
-.probabilities {
-    width: 100%;
-    max-width: 480px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
 
-.prob-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.prob-label {
-    width: 85px;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--ink-60);
-    text-align: right;
-    text-transform: uppercase;
-    letter-spacing: 0;
-}
-
-.prob-track {
-    flex: 1;
-    height: 8px;
-    background: var(--gray);
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-.prob-fill {
-    height: 100%;
-    border-radius: 5px;
-    transition: width 0.8s ease-out;
-}
-
-.prob-normal {
-    background: var(--success);
-}
-
-.prob-pneumonia {
-    background: var(--attention);
-}
-
-.prob-value {
-    width: 45px;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--black);
-    font-variant-numeric: tabular-nums;
-}
 
 /* QR Code Section — aqryl flat card */
 .qr-section {

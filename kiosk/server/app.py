@@ -105,7 +105,7 @@ def start_scan():
     session["capture_path"] = None
     session["result"] = None
 
-    return render_template("partials/preview.html")
+    return render_template("partials/preview.html", t=int(datetime.now().timestamp()))
 
 
 @app.route("/api/preview")
@@ -113,10 +113,14 @@ def video_feed():
     """MJPEG video stream for live camera preview."""
     if not camera.is_open():
         camera.open()
-    return Response(
+    response = Response(
         camera.generate_preview_frames(),
         mimetype='multipart/x-mixed-replace; boundary=frame'
     )
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 
 @app.route("/api/capture", methods=["POST"])

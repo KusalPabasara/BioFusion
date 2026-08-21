@@ -4,36 +4,23 @@
         
         <!-- Left Side: Results & Images -->
         <div class="results-left">
-            <!-- Result card — aqryl bf-result style -->
-            <div class="result-badge result-{{ result.class_name|lower }}">
-                <div class="result-icon">
-                    {% if result.class_name == 'NORMAL' %}✓{% else %}⚠{% endif %}
-                </div>
-                <div class="result-info">
-                    <span class="result-label">
-                        <span style="width:10px;height:10px;border-radius:50%;background:{% if result.class_name == 'NORMAL' %}var(--success){% else %}var(--attention){% endif %};display:inline-block;margin-right:6px;"></span>
-                        {{ result.class_name }}
-                    </span>
-                    <span class="result-big">{{ "%.0f"|format(result.confidence * 100) }}%</span>
-                    <span class="result-confidence">Pneumonia probability</span>
-                </div>
-            </div>
-
-            <!-- Probability meter — aqryl bf-meter style -->
-            <div class="probabilities">
-                <div class="prob-bar">
-                    <span class="prob-label">Normal</span>
-                    <div class="prob-track">
-                        <div class="prob-fill prob-normal" style="width: {{ "%.1f"|format(result.probabilities.normal * 100) }}%"></div>
+            <!-- Result Gauge -->
+            <div class="result-gauge-wrapper result-{{ result.class_name|lower }}">
+                <div class="gauge-container">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="42" class="gauge-track-bg"></circle>
+                        <circle cx="50" cy="50" r="42" class="gauge-track-fill" 
+                                style="stroke-dasharray: 263.89; stroke-dashoffset: {{ 263.89 - (263.89 * result.confidence) }};"></circle>
+                    </svg>
+                    <div class="gauge-inner">
+                        <div class="gauge-value">{{ "%.0f"|format(result.confidence * 100) }}<span>%</span></div>
                     </div>
-                    <span class="prob-value">{{ "%.1f"|format(result.probabilities.normal * 100) }}%</span>
                 </div>
-                <div class="prob-bar">
-                    <span class="prob-label">Pneumonia</span>
-                    <div class="prob-track">
-                        <div class="prob-fill prob-pneumonia" style="width: {{ "%.1f"|format(result.probabilities.pneumonia * 100) }}%"></div>
+                <div class="gauge-label-box">
+                    <div class="result-icon">
+                        {% if result.class_name == 'NORMAL' %}✓{% else %}⚠{% endif %}
                     </div>
-                    <span class="prob-value">{{ "%.1f"|format(result.probabilities.pneumonia * 100) }}%</span>
+                    <span class="result-label">{{ result.class_name }}</span>
                 </div>
             </div>
 
