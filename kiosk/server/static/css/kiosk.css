@@ -154,13 +154,13 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: min(3vh, 20px);
     text-align: center;
 }
 
 .hero-icon {
-    width: 140px;
-    height: 140px;
+    width: min(20vh, 140px);
+    height: min(20vh, 140px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -185,7 +185,7 @@ body {
 
 .idle-title {
     font-family: var(--font-head);
-    font-size: 2.2rem;
+    font-size: min(5vh, 2.2rem);
     font-weight: 400;
     line-height: 1.1;
     color: var(--black);
@@ -357,7 +357,8 @@ body {
 
 .preview-frame {
     position: relative;
-    width: 320px;
+    width: auto;
+    height: min(55vh, 480px);
     max-width: 100%;
     aspect-ratio: 3/4;
     background: var(--gray);
@@ -407,8 +408,8 @@ body {
 /* ─── Results State ──────────────────────────────────────────────────────── */
 .results-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 380px);
-    gap: 40px;
+    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 380px);
+    gap: min(4vh, 40px);
     width: 100%;
 }
 
@@ -417,7 +418,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    gap: 24px;
+    gap: min(3vh, 24px);
     height: 100%;
 }
 
@@ -425,7 +426,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 24px;
+    gap: min(3vh, 24px);
     height: 100%;
 }
 
@@ -434,15 +435,15 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    gap: min(3vh, 24px);
     animation: bf-rise 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     width: 100%;
 }
 
 .gauge-container {
     position: relative;
-    width: 140px;
-    height: 140px;
+    width: min(20vh, 160px);
+    height: min(20vh, 160px);
     border-radius: 50%;
     background: var(--white);
     box-shadow: 
@@ -487,8 +488,8 @@ body {
 
 .gauge-inner {
     position: relative;
-    width: 90px;
-    height: 90px;
+    width: min(13vh, 100px);
+    height: min(13vh, 100px);
     border-radius: 50%;
     background: var(--white);
     box-shadow: 
@@ -502,7 +503,7 @@ body {
 
 .gauge-value {
     font-family: var(--font-head);
-    font-size: 24px;
+    font-size: min(4vh, 28px);
     font-weight: 600;
     color: var(--black);
     display: flex;
@@ -586,8 +587,8 @@ body {
 }
 
 .result-image {
-    width: 160px;
-    height: 160px;
+    width: min(22vh, 180px);
+    height: min(22vh, 180px);
     object-fit: cover;
     border-radius: var(--radius-md);
     background: var(--gray);
@@ -608,8 +609,8 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    gap: 16px;
-    padding: 16px 24px;
+    gap: min(2vh, 16px);
+    padding: min(2vh, 16px) 24px;
     background: var(--white);
     border: 1px solid var(--hair);
     border-radius: var(--radius-lg);
@@ -620,8 +621,8 @@ body {
 }
 
 .qr-image {
-    width: 160px;
-    height: 160px;
+    width: min(22vh, 180px);
+    height: min(22vh, 180px);
     border-radius: var(--radius-sm);
 }
 
@@ -660,7 +661,7 @@ body {
     line-height: 16px;
     border-left: 4px solid var(--primary);
     padding: 8px 0 8px 12px;
-    margin-top: 16px;
+    margin-top: min(2vh, 16px);
     width: 100%;
     text-align: left;
 }
