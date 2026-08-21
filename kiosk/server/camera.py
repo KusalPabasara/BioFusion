@@ -36,14 +36,15 @@ class CameraController:
         with self._lock:
             if self.cap and self.cap.isOpened():
                 return True
-            self.cap = cv2.VideoCapture(self.camera_index)
+            # Re-enable DSHOW as MSMF fails on this webcam
+            self.cap = cv2.VideoCapture(self.camera_index, cv2.CAP_DSHOW)
             if not self.cap.isOpened():
                 logger.error(f"Failed to open camera at index {self.camera_index}")
                 self.cap = None
                 return False
-            # Set resolution for preview (will switch to high-res for capture)
-            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.preview_width)
-            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.preview_height)
+            # Let the camera use its native resolution to avoid DSHOW static/corruption bugs
+            # self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.preview_width)
+            # self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.preview_height)
             logger.info(f"Camera opened at index {self.camera_index}")
             return True
 
@@ -75,11 +76,9 @@ class CameraController:
                 time.sleep(0.1)
                 continue
 
-            # Rotate for portrait mode
-            frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
-
-            # Resize for preview (swap width and height for portrait)
-            frame = cv2.resize(frame, (self.preview_height, self.preview_width))
+            # Resize for preview (maintain landscape/original aspect ratio)
+            # The CSS object-fit: cover will handle cropping it to the portrait frame
+            frame = cv2.resize(frame, (self.preview_width, self.preview_height))
 
             # Encode as JPEG
             _, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 70])
@@ -109,9 +108,9 @@ class CameraController:
                 logger.error("Camera not open for capture")
                 return None, None
 
-            # Switch to high-res
-            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.capture_width)
-            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.capture_height)
+            # Don't switch resolutions dynamically, it breaks DSHOW webcams
+            # self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.capture_width)
+            # self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.capture_height)
             time.sleep(0.3)  # Let camera adjust
 
             # Grab a few frames to let auto-exposure settle
@@ -120,16 +119,13 @@ class CameraController:
 
             ret, frame = self.cap.read()
 
-            # Switch back to preview resolution
-            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.preview_width)
-            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.preview_height)
+            # Don't switch resolutions dynamically
+            # self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.preview_width)
+            # self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.preview_height)
 
         if not ret:
             logger.error("Failed to capture frame")
             return None, None
-
-        # Rotate for portrait mode
-        frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
 
         # Save to captures directory
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
